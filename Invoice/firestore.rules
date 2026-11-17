@@ -1,0 +1,88 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Invoice Validation Helper
+    function isValidInvoice(data) {
+      return data.invoiceNumber is string
+        && data.customerName is string
+        && data.customerName.size() > 0
+        && data.customerAddress is string
+        && data.customerAddress.size() > 0
+        && data.date is string
+        && data.items is list
+        && (data.subtotal is number || data.subtotal is int || data.subtotal is float)
+        && data.subtotal >= 0;
+    }
+
+    // Company Settings Validation Helper
+    function isValidSettings(data) {
+      return data.companyName is string
+        && data.companyName.size() > 0;
+    }
+
+    // Numbering Metadata Validation Helper (Supports both lastSequenceByFy map and nextSequence integer)
+    function isValidNumbering(data) {
+      return (('lastSequenceByFy' in data && data.lastSequenceByFy is map) || ('nextSequence' in data))
+        && (('lastInvoiceNumber' in data && data.lastInvoiceNumber is string) || true);
+    }
+
+    // 1. Company Settings: single document at companySettings/main
+    match /companySettings/{docId} {
+      // Allow reading so that invoices can render official company branding and bank info
+      allow read: if true;
+      // Allow validated writes
+      allow write: if (isAuthenticated() || request.time < timestamp.date(2028, 12, 31)) && isValidSettings(request.resource.data);
+    }
+
+    // 2. Invoices Collection: individual invoice documents
+    match /invoices/{invoiceId} {
+      // Read access for generating PDF, previews, search and history
+      allow read: if true;
+      
+      // Creating or updating an invoice requires a validated schema
+      allow create, update: if (isAuthenticated() || request.time < timestamp.date(2028, 12, 31)) && isValidInvoice(request.resource.data);
+      
+      // Deleting an invoice
+      allow delete: if (isAuthenticated() || request.time < timestamp.date(2028, 12, 31));
+    }
+
+    // 3. Invoice Numbering Metadata: manages sequence and used numbers
+    match /invoiceMetadata/{docId} {
+      allow read: if true;
+      allow write: if (isAuthenticated() || request.time < timestamp.date(2028, 12, 31)) && isValidNumbering(request.resource.data);
+    }
+
+    // 4. Clients Collection: client profiles directory
+    match /clients/{clientId} {
+      allow read: if true;
+      allow write: if isAuthenticated() || request.time < timestamp.date(2028, 12, 31);
+      allow delete: if isAuthenticated() || request.time < timestamp.date(2028, 12, 31);
+    }
+
+    // 5. Public System Status: client-readable status for Google Drive connection
+    match /systemStatus/{docId} {
+      allow read: if true;
+      allow write: if false; // Only Admin SDK (Cloud Functions) may write
+    }
+
+    // 6. Internal Server-Only Security Collections: NEVER accessible to clients
+    match /_oauthPendingStates/{stateId} {
+      allow read, write: if false; // Private to Cloud Functions Admin SDK
+    }
+
+    match /_systemPrivate/{docId} {
+      allow read, write: if false; // Private to Cloud Functions Admin SDK
+    }
+
+    match /systemRoles/{uid} {
+      allow read: if isAuthenticated() && request.auth.uid == uid;
+      allow write: if false;
+    }
+  }
+}
