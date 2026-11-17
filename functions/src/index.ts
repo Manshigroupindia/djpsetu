@@ -145,7 +145,7 @@ export const createStaffAccount = functions.https.onCall(async (data, context) =
   const employeeId = staffData.employeeId.trim().toUpperCase();
   const password = initialPassword && initialPassword.trim().length >= 6
     ? initialPassword.trim()
-    : `Manshi@${employeeId.replace(/[^a-zA-Z0-9]/g, '')}2026`;
+    : `Deven@${employeeId.replace(/[^a-zA-Z0-9]/g, '')}2026`;
 
   const db = admin.firestore();
 

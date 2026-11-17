@@ -1,4 +1,4 @@
-// Salary Calculation Engine for Manshi Group Setu
+// Salary Calculation Engine for Deven Jha Productions Setu
 // Implements 30-day fixed salary basis policy
 
 import { Staff, AttendanceRecord, Holiday, SalaryAdvance, SalaryRecord } from '../types';

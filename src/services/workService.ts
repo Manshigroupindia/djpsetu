@@ -1,4 +1,4 @@
-// Work & Task Management Service for Manshi Group Setu
+// Work & Task Management Service for Deven Jha Productions Setu
 
 import {
   collection,

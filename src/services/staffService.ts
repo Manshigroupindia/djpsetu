@@ -1,4 +1,4 @@
-// Staff Management Service with Secure Provisioning for Manshi Group Setu
+// Staff Management Service with Secure Provisioning for Deven Jha Productions Setu
 
 import { initializeApp, deleteApp } from 'firebase/app';
 import { getAuth, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
@@ -57,7 +57,7 @@ export class StaffService {
     // Default secure initial password if not explicitly supplied
     const password = initialPassword && initialPassword.trim().length >= 6
       ? initialPassword.trim()
-      : `Manshi@${employeeId.replace(/[^a-zA-Z0-9]/g, '')}2026`;
+      : `Deven@${employeeId.replace(/[^a-zA-Z0-9]/g, '')}2026`;
 
     let createdUid = '';
     const secondaryAppName = `StaffProvision_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
@@ -405,12 +405,18 @@ export class StaffService {
   }
 
   /**
-   * Real-time subscription to all staff members
+   * Real-time subscription to staff members (filtered for staff, full directory for director)
    */
-  subscribeStaff(callback: (staff: Staff[]) => void): () => void {
+  subscribeStaff(
+    callback: (staff: Staff[]) => void,
+    employeeIdFilter?: string
+  ): () => void {
     const staffRef = collection(db, 'staff');
+    const q = employeeIdFilter
+      ? query(staffRef, where('employeeId', '==', employeeIdFilter))
+      : staffRef;
     return onSnapshot(
-      staffRef,
+      q,
       (snapshot) => {
         const staffList: Staff[] = [];
         const seen = new Set<string>();

@@ -62,8 +62,8 @@ function computeExpiryDate(joiningDateStr?: string, customExpiry?: string): stri
 
 /**
  * =======================================================================
- * FRONT SIDE OF MANSHI GROUP OF SERVICES ID CARD
- * Exact recreation of id-front.jpeg (Dimensions: 360px x 571px)
+ * FRONT SIDE OF DEVEN JHA PRODUCTIONS ID CARD
+ * Exact recreation with Deven Jha Productions branding (Dimensions: 360px x 571px)
  * =======================================================================
  */
 export const ManshiIdCardFront: React.FC<{ staff: Staff }> = ({ staff }) => {
@@ -114,7 +114,7 @@ export const ManshiIdCardFront: React.FC<{ staff: Staff }> = ({ staff }) => {
             fill="#232731"
           />
 
-          {/* Heading Text: Manshi Group */}
+          {/* Heading Text: Deven Jha */}
           <text
             x="180"
             y="56"
@@ -125,10 +125,10 @@ export const ManshiIdCardFront: React.FC<{ staff: Staff }> = ({ staff }) => {
             fontSize="26.5"
             letterSpacing="-0.3"
           >
-            Manshi Group
+            Deven Jha
           </text>
 
-          {/* Heading Text: Of Services */}
+          {/* Heading Text: Productions */}
           <text
             x="180"
             y="94"
@@ -139,7 +139,7 @@ export const ManshiIdCardFront: React.FC<{ staff: Staff }> = ({ staff }) => {
             fontSize="26.5"
             letterSpacing="-0.3"
           >
-            Of Services
+            Productions
           </text>
         </svg>
       </div>
@@ -173,7 +173,7 @@ export const ManshiIdCardFront: React.FC<{ staff: Staff }> = ({ staff }) => {
             />
           ) : (
             <div className="w-full h-full bg-gradient-to-b from-slate-200 to-slate-300 flex items-center justify-center font-id-slab font-black text-3xl text-[#232731]">
-              {staff.fullName ? staff.fullName.charAt(0).toUpperCase() : 'M'}
+              {staff.fullName ? staff.fullName.charAt(0).toUpperCase() : 'D'}
             </div>
           )}
         </div>
@@ -299,8 +299,8 @@ export const ManshiIdCardFront: React.FC<{ staff: Staff }> = ({ staff }) => {
 
 /**
  * =======================================================================
- * BACK SIDE OF MANSHI GROUP OF SERVICES ID CARD
- * Exact recreation of id-back.jpeg (Dimensions: 360px x 571px)
+ * BACK SIDE OF DEVEN JHA PRODUCTIONS ID CARD
+ * Exact recreation with Deven Jha Productions branding (Dimensions: 360px x 571px)
  * =======================================================================
  */
 export const ManshiIdCardBack: React.FC<{ staff: Staff }> = ({ staff }) => {
@@ -416,7 +416,7 @@ export const ManshiIdCardBack: React.FC<{ staff: Staff }> = ({ staff }) => {
             fontSize="16.5"
             fill="#e11d48"
           >
-            Manshi Group
+            Deven Jha
           </text>
           <text
             x="100"
@@ -427,7 +427,7 @@ export const ManshiIdCardBack: React.FC<{ staff: Staff }> = ({ staff }) => {
             fontSize="17.5"
             fill="#e11d48"
           >
-            Of Services
+            Productions
           </text>
           <text
             x="100"
@@ -458,7 +458,7 @@ export const ManshiIdCardBack: React.FC<{ staff: Staff }> = ({ staff }) => {
         {/* Point 1 (Black) */}
         <p className="text-[#1f242d] font-bold text-justify">
           <span className="font-extrabold mr-1">1.</span>
-          यह परिचय पत्र मान्शी ग्रुप ऑफ सर्विसेज की सम्पति है इस परिचय पत्र के खो जाने पर तुरंत स्थानीय कार्यालय व स्थानीय पुलिस थाने को सूचित करें ।
+          यह परिचय पत्र देवेन झा प्रोडक्शन्स की सम्पति है इस परिचय पत्र के खो जाने पर तुरंत स्थानीय कार्यालय व स्थानीय पुलिस थाने को सूचित करें ।
         </p>
 
         {/* Point 2 (Vibrant Red) */}
@@ -549,10 +549,10 @@ export const ManshiIdCardBack: React.FC<{ staff: Staff }> = ({ staff }) => {
           </span>
           <span className="font-bold text-[#1f242d] mr-2" style={{ fontSize: '12.5px' }}>:</span>
           <a
-            href="mailto:manshigroupindia@gmail.com"
+            href="mailto:devenjhaproductions@gmail.com"
             className="text-[#1a3db8] font-bold underline truncate text-[11.5px]"
           >
-            manshigroupindia@gmail.com
+            devenjhaproductions@gmail.com
           </a>
         </div>
 
@@ -563,12 +563,12 @@ export const ManshiIdCardBack: React.FC<{ staff: Staff }> = ({ staff }) => {
           </span>
           <span className="font-bold text-[#1f242d] mr-2" style={{ fontSize: '12.5px' }}>:</span>
           <a
-            href="https://www.manshigroup.in"
+            href="https://www.devenjhaproductions.com"
             target="_blank"
             rel="noreferrer"
             className="text-[#1a3db8] font-bold underline text-[11.5px]"
           >
-            www.manshigroup.in
+            www.devenjhaproductions.com
           </a>
         </div>
 

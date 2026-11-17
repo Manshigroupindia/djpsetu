@@ -1,4 +1,4 @@
-// Firebase Authentication & Authorization Service for Manshi Group Setu
+// Firebase Authentication & Authorization Service for Deven Jha Productions Setu
 
 import {
   signInWithEmailAndPassword,

@@ -1,4 +1,4 @@
-// Geolocation & Distance Utilities for Manshi Group Setu
+// Geolocation & Distance Utilities for Deven Jha Productions Setu
 
 /**
  * Calculate straight-line distance in meters between two GPS coordinates using the Haversine formula

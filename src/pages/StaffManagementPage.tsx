@@ -161,7 +161,7 @@ export const StaffManagementPage: React.FC = () => {
     setFormMonthlySalary('');
     setFormAddress('');
     setFormAvatarUrl('');
-    setFormInitialPassword(`Manshi@${previewId.replace(/[^a-zA-Z0-9]/g, '')}2026`);
+    setFormInitialPassword(`Deven@${previewId.replace(/[^a-zA-Z0-9]/g, '')}2026`);
 
     setFormEmName('');
     setFormEmRelation('');
@@ -308,7 +308,7 @@ export const StaffManagementPage: React.FC = () => {
 
         const initialPasswordToUse = formInitialPassword.trim()
           ? formInitialPassword.trim()
-          : `Manshi@${allocatedId.replace(/[^a-zA-Z0-9]/g, '')}2026`;
+          : `Deven@${allocatedId.replace(/[^a-zA-Z0-9]/g, '')}2026`;
 
         await addStaff(newStaffItem, initialPasswordToUse);
       }
@@ -1034,7 +1034,7 @@ export const StaffManagementPage: React.FC = () => {
                 <input
                   type="email"
                   required
-                  placeholder="name@manshigroup.in"
+                  placeholder="name@devenjhaproductions.com"
                   value={formEmail}
                   onChange={(e) => setFormEmail(e.target.value)}
                   className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-navy-700 bg-white dark:bg-navy-800 text-xs"
@@ -1095,7 +1095,7 @@ export const StaffManagementPage: React.FC = () => {
                   required
                   value={formInitialPassword}
                   onChange={(e) => setFormInitialPassword(e.target.value)}
-                  placeholder="e.g. Manshi@MGS1092026"
+                  placeholder="e.g. Deven@MGS1092026"
                   className="w-full px-3 py-2 rounded-xl border border-amber-300 dark:border-amber-800 bg-white dark:bg-navy-900 text-xs font-mono font-bold text-slate-900 dark:text-white"
                 />
                 <span className="text-[10px] text-amber-700 dark:text-amber-400 block">
@@ -1399,12 +1399,12 @@ export const StaffManagementPage: React.FC = () => {
         </Modal>
       )}
 
-      {/* PRINTABLE EMPLOYEE ID BADGE MODAL (Manshi Group Of Services Exact Recreation) */}
+      {/* PRINTABLE EMPLOYEE ID BADGE MODAL (Deven Jha Productions Official Recreation) */}
       {selectedStaff && (
         <Modal
           isOpen={isIdCardModalOpen}
           onClose={() => setIsIdCardModalOpen(false)}
-          title="Manshi Group Of Services — Official Identity Card"
+          title="Deven Jha Productions — Official Identity Card"
           subtitle={`${selectedStaff.fullName} · ${selectedStaff.employeeId} · ${selectedStaff.designation}`}
           maxWidth="4xl"
         >

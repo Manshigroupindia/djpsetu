@@ -16,6 +16,7 @@ import {
   X,
   ChevronRight,
   ShieldCheck,
+  FileSpreadsheet,
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
@@ -50,6 +51,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, setMobileOpen }) =
       badge: pendingTasksCount > 0 ? pendingTasksCount : undefined,
       badgeColor: 'bg-amber-500',
     },
+    {
+      name: 'Invoice',
+      path: '/invoice',
+      icon: FileSpreadsheet,
+    },
     { name: 'Attendance', path: '/admin/attendance', icon: CalendarCheck },
     {
       name: 'Expenses',
@@ -82,13 +88,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, setMobileOpen }) =
       {/* Brand Header */}
       <div className="px-5 py-5 border-b border-slate-200 dark:border-navy-800 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-600 to-brand-800 flex items-center justify-center text-white shadow-md shadow-brand-500/20 shrink-0">
-            <Building2 className="w-5 h-5" />
-          </div>
+          <img
+            src="/djp-logo.png"
+            alt="Deven Jha Productions Logo"
+            className="w-10 h-10 rounded-xl object-contain shadow-md shadow-brand-500/20 shrink-0 bg-white p-0.5 border border-slate-100 dark:border-navy-800"
+          />
           <div>
             <div className="flex items-center gap-1.5">
               <span className="font-extrabold text-base tracking-tight text-slate-900 dark:text-white">
-                Manshi Group
+                Deven Jha Productions
               </span>
               <span className="px-1.5 py-0.5 text-[10px] font-bold tracking-wider uppercase rounded bg-brand-50 dark:bg-brand-950/50 text-brand-700 dark:text-brand-400 border border-brand-200 dark:border-brand-900">
                 Setu

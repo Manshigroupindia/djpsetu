@@ -1,4 +1,4 @@
-// Automatic Idempotent Data Migration & Cleanup Service for Manshi Group Setu
+// Automatic Idempotent Data Migration & Cleanup Service for Deven Jha Productions Setu
 
 import {
   doc,

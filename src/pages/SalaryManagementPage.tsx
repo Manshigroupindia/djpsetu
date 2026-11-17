@@ -1068,7 +1068,7 @@ export const SalaryManagementPage: React.FC = () => {
                 </div>
                 <div className="text-center">
                   <div className="w-44 border-t border-slate-400 mb-1" />
-                  <span className="font-bold text-slate-800">For Manshi Group of Services</span>
+                  <span className="font-bold text-slate-800">For Deven Jha Productions</span>
                   <div className="text-[10px]">Authorized Signatory</div>
                 </div>
               </div>

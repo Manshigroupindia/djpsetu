@@ -1,4 +1,4 @@
-// Expense Management Service for Manshi Group Setu
+// Expense Management Service for Deven Jha Productions Setu
 
 import {
   collection,

@@ -1,4 +1,4 @@
-// Custom Hook for Robust Geolocation & Duty Attendance Actions in Manshi Group Setu
+// Custom Hook for Robust Geolocation & Duty Attendance Actions in Deven Jha Productions Setu
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import {

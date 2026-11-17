@@ -232,7 +232,7 @@ export const StaffSalaryPage: React.FC = () => {
         <div className="bg-white dark:bg-navy-900 rounded-3xl p-6 border border-slate-200 dark:border-navy-800 shadow-sm space-y-4">
           <div className="flex items-center gap-2 text-sm font-extrabold text-slate-900 dark:text-white">
             <ShieldCheck className="w-4 h-4 text-emerald-600" />
-            <span>Manshi Group Salary Policy</span>
+            <span>Deven Jha Productions Salary Policy</span>
           </div>
 
           <div className="text-xs text-slate-600 dark:text-slate-400 space-y-3 leading-relaxed">
@@ -360,7 +360,7 @@ export const StaffSalaryPage: React.FC = () => {
 
             {/* Slip Content */}
             <div className="pt-6 space-y-6">
-              {/* Slip Header with Manshi Branding */}
+              {/* Slip Header with Deven Jha Productions Branding */}
               <div className="flex items-start justify-between border-b pb-6 border-slate-200 dark:border-navy-800">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-800 flex items-center justify-center text-white font-bold">
@@ -368,7 +368,7 @@ export const StaffSalaryPage: React.FC = () => {
                   </div>
                   <div>
                     <h2 className="text-xl font-black tracking-tight text-slate-900 dark:text-white">
-                      {settings.companyName || 'Manshi Group of Services'}
+                      {settings.companyName || 'Deven Jha Productions'}
                     </h2>
                     <p className="text-xs text-slate-500">{settings.officeLocation}</p>
                     <p className="text-[11px] text-slate-400 font-mono">
@@ -493,7 +493,7 @@ export const StaffSalaryPage: React.FC = () => {
               </div>
 
               <div className="text-[10px] text-slate-400 text-center pt-2">
-                This is a computer-generated salary advice slip issued under Manshi Group Setu Office Management System.
+                This is a computer-generated salary advice slip issued under Deven Jha Productions Setu Office Management System.
               </div>
             </div>
           </div>

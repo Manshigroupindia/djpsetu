@@ -1,4 +1,4 @@
-// Salary & Advances Processing Service for Manshi Group Setu
+// Salary & Advances Processing Service for Deven Jha Productions Setu
 
 import {
   collection,

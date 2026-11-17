@@ -16,6 +16,7 @@ import { HolidaysEventsPage } from './pages/HolidaysEventsPage';
 import { CompanyResourcesPage } from './pages/CompanyResourcesPage';
 import { StaffManagementPage } from './pages/StaffManagementPage';
 import { SettingsPage } from './pages/SettingsPage';
+import { InvoiceStandalonePage } from './pages/InvoiceStandalonePage';
 
 // Staff Portal Layout & Pages
 import { StaffLayout } from './components/layout/StaffLayout';
@@ -40,6 +41,9 @@ export function App() {
           {/* Staff Feature Roadmap / Coming Soon Information */}
           <Route path="/staff-portal" element={<StaffComingSoonPage />} />
 
+          {/* Independent Full-Screen Invoice Application (Outside Setu Layout) */}
+          <Route path="/invoice" element={<InvoiceStandalonePage />} />
+
           {/* Staff Portal Layout & Modules */}
           <Route path="/staff" element={<StaffLayout />}>
             <Route index element={<Navigate to="/staff/dashboard" replace />} />
@@ -59,6 +63,7 @@ export function App() {
             <Route index element={<Navigate to="/admin/dashboard" replace />} />
             <Route path="dashboard" element={<DashboardPage />} />
             <Route path="work" element={<WorkManagementPage />} />
+            <Route path="invoice" element={<Navigate to="/invoice" replace />} />
             <Route path="attendance" element={<AttendancePage />} />
             <Route path="expenses" element={<ExpenseManagementPage />} />
             <Route path="salary" element={<SalaryManagementPage />} />

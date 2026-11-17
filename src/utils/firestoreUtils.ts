@@ -1,4 +1,4 @@
-// Firestore Data Sanitization & Utility Functions for Manshi Group Setu
+// Firestore Data Sanitization & Utility Functions for Deven Jha Productions Setu
 
 /**
  * Deeply sanitizes an object payload destined for Firestore operations.

@@ -1,4 +1,4 @@
-// Company Settings, Holidays, Events, Resources and Audit Service for Manshi Group Setu
+// Company Settings, Holidays, Events, Resources and Audit Service for Deven Jha Productions Setu
 
 import {
   collection,
@@ -18,7 +18,7 @@ import {
   CompanyResource,
   AuditLog,
 } from '../types';
-import { defaultSettings } from './storageService';
+import { defaultSettings, sanitizeCompanySettings } from './storageService';
 import {
   isDemoHoliday,
   isDemoEvent,
@@ -31,7 +31,7 @@ export class CompanyService {
     const docRef = doc(db, 'companySettings', 'general');
     const snap = await getDoc(docRef);
     if (snap.exists()) {
-      return snap.data() as CompanySettings;
+      return sanitizeCompanySettings(snap.data() as CompanySettings);
     }
     return defaultSettings;
   }
@@ -54,7 +54,7 @@ export class CompanyService {
       docRef,
       (docSnap) => {
         if (docSnap.exists()) {
-          callback(docSnap.data() as CompanySettings);
+          callback(sanitizeCompanySettings(docSnap.data() as CompanySettings));
         } else {
           callback(defaultSettings);
         }

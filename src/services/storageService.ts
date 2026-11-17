@@ -1,4 +1,4 @@
-// LocalStorage data service for Manshi Group Setu
+// LocalStorage data service for Deven Jha Productions Setu
 
 import {
   Staff,
@@ -43,13 +43,13 @@ const STORAGE_KEYS = {
 
 // Default Company Settings
 export const defaultSettings: CompanySettings = {
-  companyName: 'Manshi Group of Services',
-  brandTagline: 'Empowering Corporate Solutions & Workforce Excellence',
-  logoUrl: '',
-  officialEmail: 'contact@manshigroup.in',
+  companyName: 'Deven Jha Productions',
+  brandTagline: 'Empowering Creative Productions & Workforce Excellence',
+  logoUrl: '/djp-logo.png',
+  officialEmail: 'contact@devenjhaproductions.com',
   contactNumber: '+91 11 4982 7700',
-  website: 'https://manshigroup.in',
-  officeAddress: 'Tower B, 4th Floor, Manshi Corporate Park, Barakhamba Road, New Delhi 110001',
+  website: 'https://devenjhaproductions.com',
+  officeAddress: 'Deven Jha Productions Corporate Office, Barakhamba Road, New Delhi 110001',
   adminName: 'Chief Administrator',
   adminDesignation: 'Director of Corporate Operations',
   officeLocation: 'Headquarters — New Delhi',
@@ -69,6 +69,39 @@ export const defaultSettings: CompanySettings = {
   },
   theme: 'light',
 };
+
+/**
+ * Ensures any old company branding is safely mapped to Deven Jha Productions on display
+ */
+export function sanitizeCompanySettings(s?: Partial<CompanySettings> | null): CompanySettings {
+  if (!s) return { ...defaultSettings };
+  let companyName = s.companyName;
+  if (!companyName || /manshi/i.test(companyName)) {
+    companyName = 'Deven Jha Productions';
+  }
+  let officeAddress = s.officeAddress;
+  if (officeAddress && /manshi/i.test(officeAddress)) {
+    officeAddress = officeAddress.replace(/Manshi\s*Corporate\s*Park/gi, 'Corporate Park').replace(/Manshi/gi, 'Deven Jha Productions');
+  } else if (!officeAddress) {
+    officeAddress = defaultSettings.officeAddress;
+  }
+  let officialEmail = s.officialEmail;
+  if (!officialEmail || /manshigroup/i.test(officialEmail)) {
+    officialEmail = 'contact@devenjhaproductions.com';
+  }
+  let website = s.website;
+  if (!website || /manshigroup/i.test(website)) {
+    website = 'https://devenjhaproductions.com';
+  }
+  return {
+    ...defaultSettings,
+    ...s,
+    companyName,
+    officeAddress,
+    officialEmail,
+    website,
+  };
+}
 
 // Initial Clean Production Defaults (Zero hardcoded demo, dummy, or sample records)
 export const initialStaffList: Staff[] = [];
@@ -627,9 +660,9 @@ export const storageService = {
   getSettings(): CompanySettings {
     try {
       const data = localStorage.getItem(STORAGE_KEYS.SETTINGS);
-      return data ? JSON.parse(data) : defaultSettings;
+      return sanitizeCompanySettings(data ? JSON.parse(data) : defaultSettings);
     } catch {
-      return defaultSettings;
+      return { ...defaultSettings };
     }
   },
   saveSettings(settings: CompanySettings) {

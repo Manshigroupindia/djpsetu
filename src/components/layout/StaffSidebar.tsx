@@ -115,13 +115,15 @@ export const StaffSidebar: React.FC<StaffSidebarProps> = ({ mobileOpen, setMobil
       {/* Brand Header */}
       <div className="px-5 py-5 border-b border-slate-200 dark:border-navy-800 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-800 flex items-center justify-center text-white shadow-md shadow-blue-500/20 shrink-0">
-            <Building2 className="w-5 h-5" />
-          </div>
+          <img
+            src="/djp-logo.png"
+            alt="Deven Jha Productions Logo"
+            className="w-10 h-10 rounded-xl object-contain shadow-md shadow-blue-500/20 shrink-0 bg-white p-0.5 border border-slate-100 dark:border-navy-800"
+          />
           <div>
             <div className="flex items-center gap-1.5">
               <span className="font-extrabold text-base tracking-tight text-slate-900 dark:text-white">
-                Manshi Group
+                Deven Jha Productions
               </span>
               <span className="px-1.5 py-0.5 text-[10px] font-bold tracking-wider uppercase rounded bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-400 border border-blue-200 dark:border-blue-900">
                 Staff

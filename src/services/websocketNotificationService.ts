@@ -1,4 +1,4 @@
-// Robust WebSocket Client for Manshi Group Setu Real-time Notifications
+// Robust WebSocket Client for Deven Jha Productions Setu Real-time Notifications
 // Supports auto-reconnect, heartbeat, auth handshake, and automatic fallback
 
 import { AppNotification, WebSocketConnectionStatus } from '../types';

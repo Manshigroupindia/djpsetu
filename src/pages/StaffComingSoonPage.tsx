@@ -53,11 +53,13 @@ export const StaffComingSoonPage: React.FC = () => {
         </button>
 
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-brand-600 flex items-center justify-center text-white">
-            <Building2 className="w-4 h-4" />
-          </div>
+          <img
+            src="/djp-logo.png"
+            alt="Deven Jha Productions Logo"
+            className="w-8 h-8 rounded-lg object-contain shadow-xs bg-white p-0.5 border border-slate-100 dark:border-navy-800"
+          />
           <span className="font-extrabold text-sm text-slate-900 dark:text-white">
-            Manshi Setu
+            Deven Jha Productions Setu
           </span>
         </div>
       </header>
@@ -77,7 +79,7 @@ export const StaffComingSoonPage: React.FC = () => {
           Staff Portal Coming Soon
         </h1>
         <p className="text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed max-w-xl mx-auto mb-10">
-          The Manshi Group employee self-service mobile and web application is currently being prepared for secure enterprise launch.
+          The Deven Jha Productions employee self-service mobile and web application is currently being prepared for secure enterprise launch.
         </p>
 
         {/* Feature Preview Grid */}

@@ -64,7 +64,7 @@ export const NoticesPage: React.FC = () => {
       setIsUploadingAttachment(true);
       setUploadProgress(0);
       const res = await cloudinaryService.uploadFile(file, {
-        folder: 'manshi-setu/shared-documents',
+        folder: 'djpsetu/shared-documents',
         onProgress: (p) => setUploadProgress(p),
       });
       setFormAttachment(res.secureUrl);

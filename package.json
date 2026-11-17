@@ -1,17 +1,22 @@
 {
-  "name": "manshi-setu",
+  "name": "deven-jha-productions-setu",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build:invoice": "npm --prefix Invoice run build && node -e \"const fs = require('fs'); fs.cpSync('Invoice/dist', 'public/invoice', { recursive: true });\"",
+    "build": "npm run build:invoice && tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview"
   },
   "dependencies": {
     "clsx": "^2.1.1",
+    "dexie": "^4.4.6",
+    "exceljs": "^4.4.0",
     "firebase": "^13.1.0",
+    "jspdf": "^4.2.1",
+    "jszip": "^3.10.2",
     "lucide-react": "^1.61.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",

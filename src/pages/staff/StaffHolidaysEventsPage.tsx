@@ -87,7 +87,7 @@ export const StaffHolidaysEventsPage: React.FC = () => {
                     Official Company Holidays
                   </h2>
                   <p className="text-xs text-slate-500 dark:text-slate-400">
-                    Paid non-working days for all Manshi Group staff
+                    Paid non-working days for all Deven Jha Productions staff
                   </p>
                 </div>
               </div>

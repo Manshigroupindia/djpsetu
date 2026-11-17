@@ -143,7 +143,7 @@ export const StaffDashboardPage: React.FC = () => {
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 border border-blue-400/30 text-xs font-semibold mb-3">
               <Sparkles className="w-3.5 h-3.5 text-blue-400" />
-              <span>Manshi Group Setu · Staff Terminal</span>
+              <span>Deven Jha Productions Setu · Staff Terminal</span>
             </div>
             <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight">
               {getGreeting()},{' '}
@@ -618,7 +618,7 @@ export const StaffDashboardPage: React.FC = () => {
                     Important Company Notices
                   </h3>
                   <p className="text-xs text-slate-500 dark:text-slate-400">
-                    Announcements from Manshi Group administration
+                    Announcements from Deven Jha Productions administration
                   </p>
                 </div>
               </div>

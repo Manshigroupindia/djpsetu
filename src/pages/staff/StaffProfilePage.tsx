@@ -183,7 +183,7 @@ export const StaffProfilePage: React.FC = () => {
                 <span>Base Office Branch</span>
               </span>
               <div className="font-bold text-slate-900 dark:text-white">
-                {currentStaff.officeLocation || 'Manshi Corporate Head Office, Connaught Place, New Delhi'}
+                {((currentStaff.officeLocation || '').replace(/Manshi\s*Corporate\s*Head\s*Office/gi, 'Deven Jha Productions Corporate Office').replace(/Manshi/gi, 'Deven Jha Productions')) || 'Deven Jha Productions Corporate Office, Connaught Place, New Delhi'}
               </div>
             </div>
 
@@ -354,12 +354,12 @@ export const StaffProfilePage: React.FC = () => {
         )}
       </div>
 
-      {/* Manshi Group Official ID Card Modal */}
+      {/* Deven Jha Productions Official ID Card Modal */}
       {currentStaff && (
         <Modal
           isOpen={isIdCardModalOpen}
           onClose={() => setIsIdCardModalOpen(false)}
-          title="Manshi Group Of Services — Official Identity Card"
+          title="Deven Jha Productions — Official Identity Card"
           subtitle={`${currentStaff.fullName} · ${currentStaff.employeeId} · ${currentStaff.designation}`}
           maxWidth="4xl"
         >

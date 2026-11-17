@@ -1,4 +1,4 @@
-// GPS Attendance Backend Service for Manshi Group Setu
+// GPS Attendance Backend Service for Deven Jha Productions Setu
 
 import {
   collection,

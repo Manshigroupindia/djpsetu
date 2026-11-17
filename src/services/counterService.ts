@@ -1,4 +1,4 @@
-// Concurrency-Safe Persistent Staff Counter Service for Manshi Group Setu
+// Concurrency-Safe Persistent Staff Counter Service for Deven Jha Productions Setu
 // Guarantees strictly sequential, permanent, non-reusable employee IDs (e.g. MGS-101, MGS-102...)
 
 import {

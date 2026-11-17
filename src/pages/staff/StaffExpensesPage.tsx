@@ -337,7 +337,7 @@ export const StaffExpensesPage: React.FC = () => {
                   Submit Official Expense Claim
                 </h3>
                 <p className="text-xs text-slate-500 dark:text-slate-400">
-                  Manshi Group Setu Reimbursement Terminal
+                  Deven Jha Productions Setu Reimbursement Terminal
                 </p>
               </div>
             </div>

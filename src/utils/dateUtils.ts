@@ -1,4 +1,4 @@
-// Date utilities for Manshi Group Setu
+// Date utilities for Deven Jha Productions Setu
 
 /**
  * Returns today's date formatted as YYYY-MM-DD in local time

@@ -1,4 +1,4 @@
-// Cloudinary Asset Upload Service for Manshi Group Setu
+// Cloudinary Asset Upload Service for Deven Jha Productions Setu
 
 export interface CloudinaryUploadResult {
   url: string;
@@ -12,11 +12,12 @@ export interface CloudinaryUploadResult {
 }
 
 export type AssetFolder =
-  | 'manshi-setu/profile-photos'
-  | 'manshi-setu/company-assets'
-  | 'manshi-setu/expense-receipts'
-  | 'manshi-setu/task-attachments'
-  | 'manshi-setu/shared-documents';
+  | 'djpsetu/profile-photos'
+  | 'djpsetu/company-assets'
+  | 'djpsetu/expense-receipts'
+  | 'djpsetu/task-attachments'
+  | 'djpsetu/shared-documents'
+  | string;
 
 export interface UploadOptions {
   folder?: AssetFolder;
@@ -51,7 +52,7 @@ export class CloudinaryService {
     options: UploadOptions = {}
   ): Promise<CloudinaryUploadResult> {
     const {
-      folder = 'manshi-setu/shared-documents',
+      folder = 'djpsetu/shared-documents',
       maxSizeBytes = 10 * 1024 * 1024, // 10MB default
       allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'application/pdf'],
       onProgress,
@@ -135,7 +136,7 @@ export class CloudinaryService {
    */
   async uploadProfilePhoto(file: File, onProgress?: (p: number) => void): Promise<CloudinaryUploadResult> {
     return this.uploadFile(file, {
-      folder: 'manshi-setu/profile-photos',
+      folder: 'djpsetu/profile-photos',
       allowedTypes: ['image/jpeg', 'image/png', 'image/webp'],
       maxSizeBytes: 5 * 1024 * 1024,
       onProgress,
@@ -147,7 +148,7 @@ export class CloudinaryService {
    */
   async uploadCompanyLogo(file: File, onProgress?: (p: number) => void): Promise<CloudinaryUploadResult> {
     return this.uploadFile(file, {
-      folder: 'manshi-setu/company-assets',
+      folder: 'djpsetu/company-assets',
       allowedTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'],
       maxSizeBytes: 5 * 1024 * 1024,
       onProgress,
@@ -159,7 +160,7 @@ export class CloudinaryService {
    */
   async uploadExpenseReceipt(file: File, onProgress?: (p: number) => void): Promise<CloudinaryUploadResult> {
     return this.uploadFile(file, {
-      folder: 'manshi-setu/expense-receipts',
+      folder: 'djpsetu/expense-receipts',
       allowedTypes: ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'],
       maxSizeBytes: 10 * 1024 * 1024,
       onProgress,
@@ -171,7 +172,7 @@ export class CloudinaryService {
    */
   async uploadTaskAttachment(file: File, onProgress?: (p: number) => void): Promise<CloudinaryUploadResult> {
     return this.uploadFile(file, {
-      folder: 'manshi-setu/task-attachments',
+      folder: 'djpsetu/task-attachments',
       allowedTypes: ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'],
       maxSizeBytes: 15 * 1024 * 1024,
       onProgress,

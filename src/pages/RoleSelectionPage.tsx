@@ -97,13 +97,15 @@ export const RoleSelectionPage: React.FC = () => {
       {/* Top Navbar */}
       <nav className="w-full border-b border-slate-200 dark:border-navy-800 bg-white/80 dark:bg-navy-900/80 backdrop-blur-md px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3.5">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-600 to-brand-800 flex items-center justify-center text-white shadow-md shadow-brand-500/20">
-            <Building2 className="w-5 h-5" />
-          </div>
+          <img
+            src="/djp-logo.png"
+            alt="Deven Jha Productions Logo"
+            className="w-10 h-10 rounded-xl object-contain shadow-md shadow-brand-500/20 bg-white p-0.5 border border-slate-100 dark:border-navy-800"
+          />
           <div>
             <div className="flex items-center gap-2">
               <span className="font-extrabold text-lg tracking-tight text-slate-900 dark:text-white">
-                Manshi Group
+                Deven Jha Productions
               </span>
               <span className="px-1.5 py-0.5 text-xs font-bold tracking-wider uppercase rounded bg-brand-50 dark:bg-brand-950/60 text-brand-700 dark:text-brand-400 border border-brand-200 dark:border-brand-900">
                 Setu
@@ -154,7 +156,7 @@ export const RoleSelectionPage: React.FC = () => {
             Official Internal Staff & Administration Gateway
           </div>
           <h1 className="text-3xl sm:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-4">
-            Welcome to <span className="text-brand-600 dark:text-brand-500">Manshi Group Setu</span>
+            Welcome to <span className="text-brand-600 dark:text-brand-500">Deven Jha Productions Setu</span>
           </h1>
           <p className="text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto font-normal">
             Select your dedicated portal to access office administration, staff attendance with live GPS duty logs, task delegation, payroll processing, and enterprise resources.
@@ -350,7 +352,7 @@ export const RoleSelectionPage: React.FC = () => {
                   Staff Self-Service Sign In
                 </h3>
                 <p className="text-xs text-slate-500 dark:text-slate-400">
-                  Firebase Authentication · Manshi Group Setu Staff Terminal
+                  Firebase Authentication · Deven Jha Productions Setu Staff Terminal
                 </p>
               </div>
             </div>

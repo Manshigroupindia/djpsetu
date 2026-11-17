@@ -1,4 +1,4 @@
-// Official Notices Service for Manshi Group Setu
+// Official Notices Service for Deven Jha Productions Setu
 
 import {
   collection,

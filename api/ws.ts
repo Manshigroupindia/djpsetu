@@ -42,7 +42,7 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
         status: 'unsupported_on_serverless',
         error: 'Vercel Serverless Functions on the Hobby plan do not support persistent TCP WebSockets.',
         guidance:
-          'Manshi Group Setu automatically uses the native Firestore Realtime WebChannel engine (100% free on Firebase Spark plan) for zero-latency push events. If a standalone WebSocket server is required, deploy a dedicated Node.js/ws instance (e.g., on Render/Railway) and set VITE_WS_NOTIFICATION_URL.',
+          'Deven Jha Productions Setu automatically uses the native Firestore Realtime WebChannel engine (100% free on Firebase Spark plan) for zero-latency push events. If a standalone WebSocket server is required, deploy a dedicated Node.js/ws instance (e.g., on Render/Railway) and set VITE_WS_NOTIFICATION_URL.',
         code: 426,
       })
     );
@@ -54,7 +54,7 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader('Content-Type', 'application/json');
   res.end(
     JSON.stringify({
-      service: 'Manshi Group Setu Notification Gateway',
+      service: 'Deven Jha Productions Setu Notification Gateway',
       environment: 'Vercel Serverless (Hobby Plan)',
       activeRealtimeEngine: 'Firebase Firestore WebChannel / Realtime Listeners',
       webSocketGatewaySupported: false,

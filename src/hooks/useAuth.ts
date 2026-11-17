@@ -1,4 +1,4 @@
-// Auth hook for Manshi Group Setu
+// Auth hook for Deven Jha Productions Setu
 
 import { useApp } from '../context/AppContext';
 

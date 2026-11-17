@@ -1,4 +1,4 @@
-// Real-time Notification Engine for Manshi Group Setu
+// Real-time Notification Engine for Deven Jha Productions Setu
 // Backed by Firestore & Web Notifications API with Deduping
 
 import {

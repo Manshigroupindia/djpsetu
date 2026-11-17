@@ -344,17 +344,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       })
     );
 
-    // Subscribe to Staff
-    unsubs.push(
-      staffService.subscribeStaff((cloudStaff) => {
-        if (cloudStaff) {
-          setStaff(cloudStaff);
-          storageService.saveStaff(cloudStaff);
-        }
-      })
-    );
-
-    // Subscribe to Work Assignments (filtered if staff)
+    // Determine Staff ID filter for staff-scoped subscriptions
     const canonicalEmployeeId = getCanonicalEmployeeId(
       auth.employeeId,
       auth.staffId || currentStaffProfile?.employeeId || currentStaffProfile?.id
@@ -362,6 +352,18 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     const staffFilter = auth.role === 'staff'
       ? (canonicalEmployeeId || auth.employeeId || 'NO_STAFF_ID')
       : undefined;
+
+    // Subscribe to Staff (filtered for staff member, full collection for director)
+    unsubs.push(
+      staffService.subscribeStaff((cloudStaff) => {
+        if (cloudStaff) {
+          setStaff(cloudStaff);
+          storageService.saveStaff(cloudStaff);
+        }
+      }, staffFilter)
+    );
+
+    // Subscribe to Work Assignments (filtered if staff)
     unsubs.push(
       workService.subscribeWork((cloudWork) => {
         if (cloudWork) {
@@ -553,7 +555,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     storageService.setAuth(session);
     setAuth(session);
     setCurrentStaffProfile(null);
-    showToast('Logged out of Manshi Group Setu.', 'info');
+    showToast('Logged out of Deven Jha Productions Setu.', 'info');
   };
 
   const resetAllDemoData = async () => {
@@ -1127,7 +1129,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
             recipientId: targetStaffId,
             recipientRole: 'staff',
             senderId: auth.uid || 'director',
-            senderName: 'Manshi Group Accounts',
+            senderName: 'Deven Jha Productions Accounts',
             title: `Salary Disbursed: ${s.month}`,
             message: `Your salary for ${s.month} has been disbursed: Net Pay ₹${s.finalPayable.toLocaleString('en-IN')}. Payslip is now available.`,
             type: 'salary_paid',
@@ -1189,7 +1191,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
             recipientId: 'all',
             recipientRole: 'all',
             senderId: auth.uid || 'admin',
-            senderName: 'Manshi Group HR',
+            senderName: 'Deven Jha Productions HR',
             title: `Holiday Added: ${h.name}`,
             message: `Office holiday scheduled for ${h.startDate} (${h.description || h.name}).`,
             type: 'holiday_added',
@@ -1224,7 +1226,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
             recipientId: 'all',
             recipientRole: 'all',
             senderId: auth.uid || 'admin',
-            senderName: 'Manshi Group HR',
+            senderName: 'Deven Jha Productions HR',
             title: `New Event: ${e.title}`,
             message: `Event on ${e.date} at ${e.startTime || 'office'}: ${e.description || e.title}`,
             type: 'event_scheduled',

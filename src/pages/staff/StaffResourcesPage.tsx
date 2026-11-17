@@ -103,11 +103,11 @@ export const StaffResourcesPage: React.FC = () => {
               <span>HR & Payroll Helpdesk</span>
             </span>
             <div className="text-xs font-bold text-slate-900 dark:text-white font-mono">
-              hr@manshigroup.in
+              hr@devenjhaproductions.com
             </div>
           </div>
           <button
-            onClick={() => handleCopy('hr@manshigroup.in', 'hr-email')}
+            onClick={() => handleCopy('hr@devenjhaproductions.com', 'hr-email')}
             className="p-2 rounded-xl text-slate-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-navy-800 transition-colors"
             title="Copy Email"
           >
@@ -120,14 +120,14 @@ export const StaffResourcesPage: React.FC = () => {
           <div className="space-y-0.5">
             <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1">
               <Globe className="w-3.5 h-3.5 text-indigo-500" />
-              <span>Manshi Group Portal</span>
+              <span>Deven Jha Productions Portal</span>
             </span>
             <div className="text-xs font-bold text-slate-900 dark:text-white font-mono">
-              portal.manshigroup.in
+              portal.devenjhaproductions.com
             </div>
           </div>
           <button
-            onClick={() => handleCopy('https://manshigroup.in', 'portal-link')}
+            onClick={() => handleCopy('https://devenjhaproductions.com', 'portal-link')}
             className="p-2 rounded-xl text-slate-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-navy-800 transition-colors"
             title="Copy URL"
           >

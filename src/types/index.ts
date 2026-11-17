@@ -1,4 +1,4 @@
-// Type definitions for Manshi Group Setu CMS & Staff Portal
+// Type definitions for Deven Jha Productions Setu CMS & Staff Portal
 
 export type StaffRole = 'admin' | 'staff';
 export type EmploymentStatus = 'active' | 'inactive' | 'on_leave';
