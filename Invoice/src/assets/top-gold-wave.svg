@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 120" width="100%" height="100%" preserveAspectRatio="none">
+  <defs>
+    <linearGradient id="goldTopGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8a6114" />
+      <stop offset="25%" stop-color="#d4af37" />
+      <stop offset="50%" stop-color="#fff1c5" />
+      <stop offset="75%" stop-color="#c59b27" />
+      <stop offset="100%" stop-color="#694605" />
+    </linearGradient>
+    <linearGradient id="goldTopGrad2" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fdf3d6" />
+      <stop offset="30%" stop-color="#d4af37" />
+      <stop offset="70%" stop-color="#9a6e18" />
+      <stop offset="100%" stop-color="#4e3304" />
+    </linearGradient>
+    <linearGradient id="goldTopGrad3" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#f9e8b2" stop-opacity="0.9" />
+      <stop offset="50%" stop-color="#d4af37" stop-opacity="0.6" />
+      <stop offset="100%" stop-color="#8a6114" stop-opacity="0.2" />
+    </linearGradient>
+    <filter id="topDropShadow" x="-10%" y="-10%" width="130%" height="150%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#3a2503" flood-opacity="0.25" />
+    </filter>
+  </defs>
+
+  <!-- Background subtle warm curve -->
+  <path d="M 320 0 C 440 25, 540 60, 680 45 C 740 38, 770 20, 800 10 L 800 0 Z" fill="url(#goldTopGrad3)" />
+
+  <!-- Main flowing golden ribbon layer 1 -->
+  <path d="M 400 0 C 480 35, 570 75, 670 65 C 725 60, 765 40, 800 25 L 800 0 Z" fill="url(#goldTopGrad1)" filter="url(#topDropShadow)" />
+
+  <!-- Foreground shimmering ribbon layer 2 -->
+  <path d="M 480 0 C 540 25, 620 50, 710 42 C 750 38, 775 25, 800 12 L 800 0 Z" fill="url(#goldTopGrad2)" />
+
+  <!-- Thin highlight edge -->
+  <path d="M 400 0 C 480 35, 570 75, 670 65 C 725 60, 765 40, 800 25" fill="none" stroke="#fff8e7" stroke-width="1.2" opacity="0.8" />
+  <path d="M 480 0 C 540 25, 620 50, 710 42 C 750 38, 775 25, 800 12" fill="none" stroke="#ffeaa7" stroke-width="0.8" opacity="0.9" />
+</svg>

@@ -1,4 +1,5 @@
 import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
 import type { InvoiceRecord, CompanySettings, InvoiceType } from '../types';
 import { formatDateToIndian, formatIndianCurrency } from './financialYear';
 import { calculateInvoiceTotals } from './taxCalculator';
@@ -64,6 +65,11 @@ async function loadFonts(doc: jsPDF): Promise<void> {
   }
 }
 
+/**
+ * Creates an authentic film-industry styled jsPDF document for Deven Jha Productions.
+ * Matches the reference image styling: gold accents, black headers, structured tables,
+ * dynamic settings, logo, QR code, and signature badge.
+ */
 export async function createInvoicePDFDocument(
   invoice: InvoiceRecord,
   companySettings?: CompanySettings
@@ -80,246 +86,245 @@ export async function createInvoicePDFDocument(
 
   const fontName = doc.getFontList()['TrebuchetMS'] ? 'TrebuchetMS' : 'Helvetica';
 
-  // Exact metrics matching Brushspace.pdf
+  // Standard A4 Metrics in points (72 pt/inch)
   const pageWidth = 595.28;
-  const marginX = 39.5; // Exactly 39.5 pt left/right margin
+  const pageHeight = 841.89;
+  const marginX = 39.5;
   const tableWidth = pageWidth - marginX * 2; // 516.28 pt
 
-  // Exact RGB Colors extracted from stream 1
-  const navyColor = { r: 58, g: 78, b: 134 }; // RGB(58, 78, 134) / #3a4e86 for table header & boxes
-  const slateTitleColor = { r: 121, g: 141, b: 197 }; // RGB(121, 141, 197) / #798dc5 for "INVOICE"
-  const companyTitleColor = { r: 44, g: 57, b: 100 }; // RGB(44, 57, 100) / #2c3964
-  const linkColor = { r: 58, g: 78, b: 134 }; // #3a4e86 for email & website links
-  const altRowColor = { r: 241, g: 241, b: 241 }; // 0.945 grayscale (#f1f1f1)
+  // Film-Industry Premium Color Palette
+  const goldBorderColor = { r: 197, g: 160, b: 89 }; // #c5a059 champagne gold
+  const goldHeaderTextColor = { r: 229, g: 192, b: 123 }; // #e5c07b warm gold
+  const darkHeaderBg = { r: 12, g: 13, b: 16 }; // #0c0d10 rich charcoal black
+  const altRowBg = { r: 251, g: 248, b: 242 }; // #fbf8f2 warm off-white tint
+  const subtotalBg = { r: 245, g: 235, b: 216 }; // #f5ebd8 warm gold-beige
+  const lightBorderColor = { r: 232, g: 220, b: 206 }; // #e8dcce
+  const charcoalText = { r: 17, g: 17, b: 17 }; // #111111
 
-  // 1. Company Logo
+  // 1. Top Decorative Golden Wave Accents (Top Right)
+  doc.setFillColor(goldBorderColor.r, goldBorderColor.g, goldBorderColor.b);
+  doc.triangle(pageWidth - 210, 0, pageWidth, 0, pageWidth, 42, 'F');
+  doc.setFillColor(253, 244, 216); // light champagne overlay
+  doc.triangle(pageWidth - 140, 0, pageWidth, 0, pageWidth, 24, 'F');
+
+  // 2. Company Logo (Top Left)
   const logoUrl = settings?.logoUrl || settings?.logoDataUrl || '/assets/logo.png';
+  let logoDrawn = false;
   try {
     const logoData = await fetchImageAsDataUrl(logoUrl);
     if (logoData) {
-      doc.addImage(logoData, 'PNG', marginX, 36, 55.6, 48);
+      doc.addImage(logoData, 'PNG', marginX, 28, 56, 48);
+      logoDrawn = true;
     }
   } catch (err) {
     console.warn('Error adding logo to PDF:', err);
   }
 
-  // 2. Company Name Beside Logo
-  const companyHeaderX = marginX + 66;
-  doc.setFont(fontName, 'bold');
-  doc.setFontSize(20.5);
-  doc.setTextColor(companyTitleColor.r, companyTitleColor.g, companyTitleColor.b);
-  doc.text(settings?.companyName || 'Deven Jha Productions', companyHeaderX, 62);
+  if (!logoDrawn) {
+    doc.setFillColor(darkHeaderBg.r, darkHeaderBg.g, darkHeaderBg.b);
+    doc.circle(marginX + 28, 52, 24, 'F');
+    doc.setFont(fontName, 'bold');
+    doc.setFontSize(14);
+    doc.setTextColor(goldHeaderTextColor.r, goldHeaderTextColor.g, goldHeaderTextColor.b);
+    doc.text('DJP', marginX + 28, 57, { align: 'center' });
+  }
 
-  // 3. INVOICE Title (Top Right)
+  // 3. Vertical Divider Line beside Logo
+  const dividerX = marginX + 66;
+  doc.setDrawColor(goldBorderColor.r, goldBorderColor.g, goldBorderColor.b);
+  doc.setLineWidth(1.2);
+  doc.line(dividerX, 32, dividerX, 72);
+
+  // 4. Company Name Beside Logo
+  const companyTitleX = dividerX + 12;
+  doc.setFont(fontName, 'bold');
+  doc.setFontSize(18);
+  doc.setTextColor(charcoalText.r, charcoalText.g, charcoalText.b);
+  doc.text(settings?.companyName || 'Deven Jha Productions', companyTitleX, 56);
+
+  // 5. INVOICE / TAX INVOICE Title (Top Right)
   const isTax = invoice.invoiceType === 'tax';
   doc.setFont(fontName, 'bold');
-  doc.setFontSize(22.5);
-  doc.setTextColor(slateTitleColor.r, slateTitleColor.g, slateTitleColor.b);
+  doc.setFontSize(22);
+  doc.setTextColor(charcoalText.r, charcoalText.g, charcoalText.b);
   const invoiceTitleText = isTax ? 'TAX INVOICE' : 'INVOICE';
   const invoiceTitleW = doc.getTextWidth(invoiceTitleText);
-  doc.text(invoiceTitleText, pageWidth - marginX - invoiceTitleW, 64);
+  const invoiceTitleX = pageWidth - marginX - invoiceTitleW;
+  doc.text(invoiceTitleText, invoiceTitleX, 56);
 
-  // 4. Fix 2: Company Address Positioned DIRECTLY BELOW Logo, starting from marginX
+  // Gold accent bar under INVOICE title
+  doc.setFillColor(goldBorderColor.r, goldBorderColor.g, goldBorderColor.b);
+  doc.roundedRect(pageWidth - marginX - 54, 62, 54, 2.5, 1, 1, 'F');
+
+  // 6. Company Address Directly Below Logo
   doc.setFont(fontName, 'normal');
-  doc.setFontSize(8.52);
-  doc.setTextColor(0, 0, 0);
+  doc.setFontSize(8.2);
+  doc.setTextColor(34, 34, 34);
 
-  const addrStartY = 96;
-  let addrY = addrStartY;
+  let addrY = 88;
   if (settings?.addressLine1) {
     doc.text(settings.addressLine1, marginX, addrY);
-    addrY += 11;
+    addrY += 10.5;
   }
   if (settings?.addressLine2) {
     doc.text(settings.addressLine2, marginX, addrY);
-    addrY += 11;
+    addrY += 10.5;
   }
   if (settings?.addressLine3) {
     doc.text(settings.addressLine3, marginX, addrY);
-    addrY += 11;
+    addrY += 10.5;
   }
 
-  // 5. Contact Details (GSTIN, Phone, Email, Website)
-  const contactY = Math.max(addrY + 3, 129);
-  const contactValX = marginX + 44;
+  // 7. Contact Details with Mini Badge Icons
+  const contactY = Math.max(addrY + 3, 122);
+  const contactValX = marginX + 54;
 
-  // Outlined Date & Invoice No. box dimensions used for alignment and safe bounds
-  const fieldBoxW = 86.8;
-  const fieldBoxH = 11.5;
-  const fieldBoxX = pageWidth - marginX - fieldBoxW;
-  const maxContactValWidth = fieldBoxX - 25 - contactValX;
+  const drawMiniBadge = (y: number, text: string) => {
+    doc.setFillColor(darkHeaderBg.r, darkHeaderBg.g, darkHeaderBg.b);
+    doc.circle(marginX + 5, y - 2.5, 5.5, 'F');
+    doc.setFont(fontName, 'bold');
+    doc.setFontSize(5.5);
+    doc.setTextColor(255, 255, 255);
+    doc.text(text, marginX + 5, y - 0.5, { align: 'center' });
+  };
 
-  // GSTIN (bold label and bold value)
+  // GSTIN
+  drawMiniBadge(contactY, 'GT');
   doc.setFont(fontName, 'bold');
-  doc.setFontSize(8.52);
-  doc.setTextColor(0, 0, 0);
-  doc.text('GSTIN :', marginX, contactY);
+  doc.setFontSize(8.2);
+  doc.setTextColor(charcoalText.r, charcoalText.g, charcoalText.b);
+  doc.text('GSTIN', marginX + 14, contactY);
+  doc.text(':', marginX + 46, contactY);
   doc.text(settings?.gstin || '09PQRPK4105E1ZG', contactValX, contactY);
 
-  // Phone (bold label and bold value)
-  doc.text('Phone:', marginX, contactY + 12);
+  // Phone
+  drawMiniBadge(contactY + 12, 'PH');
+  doc.setFont(fontName, 'normal');
+  doc.text('Phone', marginX + 14, contactY + 12);
+  doc.text(':', marginX + 46, contactY + 12);
   doc.text(settings?.phone || '8076187274', contactValX, contactY + 12);
 
-  // Email id:- (blue, underlined label and value with clear gap, aligned with contact values)
-  doc.setFont(fontName, 'normal');
-  doc.setTextColor(linkColor.r, linkColor.g, linkColor.b);
-  doc.setDrawColor(linkColor.r, linkColor.g, linkColor.b);
-  doc.setLineWidth(0.6);
+  // Email
+  drawMiniBadge(contactY + 24, '@');
+  doc.text('Email Id', marginX + 14, contactY + 24);
+  doc.text(':', marginX + 46, contactY + 24);
+  doc.text(settings?.email || 'info@devenjhaproductions.com', contactValX, contactY + 24);
 
-  const emailLabel = 'Email id:-';
-  doc.text(emailLabel, marginX, contactY + 24);
-  const emailLabelWidth = doc.getTextWidth(emailLabel);
-  doc.line(marginX, contactY + 25, marginX + emailLabelWidth, contactY + 25);
+  // Website
+  drawMiniBadge(contactY + 36, 'W');
+  doc.text('Website', marginX + 14, contactY + 36);
+  doc.text(':', marginX + 46, contactY + 36);
+  doc.text(settings?.website || 'www.devenjhaproductions.com', contactValX, contactY + 36);
 
-  const emailVal = settings?.email || 'Info@devenjhaproductions.com';
-  let emailFontSize = 8.52;
-  while (doc.getTextWidth(emailVal) > maxContactValWidth && emailFontSize > 5) {
-    emailFontSize -= 0.25;
-    doc.setFontSize(emailFontSize);
-  }
-  doc.text(emailVal, contactValX, contactY + 24);
-  const emailValWidth = doc.getTextWidth(emailVal);
-  doc.line(contactValX, contactY + 25, contactValX + emailValWidth, contactY + 25);
-  doc.setFontSize(8.52);
+  // 8. Date & Invoice No Rounded Card (Aligned on Right)
+  const metaCardW = 146;
+  const metaCardH = 46;
+  const metaCardX = pageWidth - marginX - metaCardW;
+  const metaCardY = contactY - 14;
 
-  // Website:- (blue, underlined label and value with clear gap, aligned with contact values)
-  const websiteLabel = 'Website:-';
-  doc.text(websiteLabel, marginX, contactY + 36);
-  const websiteLabelWidth = doc.getTextWidth(websiteLabel);
-  doc.line(marginX, contactY + 37, marginX + websiteLabelWidth, contactY + 37);
+  doc.setDrawColor(goldBorderColor.r, goldBorderColor.g, goldBorderColor.b);
+  doc.setLineWidth(1.2);
+  doc.roundedRect(metaCardX, metaCardY, metaCardW, metaCardH, 6, 6, 'S');
 
-  const websiteVal = settings?.website || 'www.devenjhaproductions.com';
-  let websiteFontSize = 8.52;
-  while (doc.getTextWidth(websiteVal) > maxContactValWidth && websiteFontSize > 5) {
-    websiteFontSize -= 0.25;
-    doc.setFontSize(websiteFontSize);
-  }
-  doc.text(websiteVal, contactValX, contactY + 36);
-  const websiteValWidth = doc.getTextWidth(websiteVal);
-  doc.line(contactValX, contactY + 37, contactValX + websiteValWidth, contactY + 37);
-  doc.setFontSize(8.52);
+  // Divider between row 1 and row 2
+  doc.line(metaCardX, metaCardY + 23, metaCardX + metaCardW, metaCardY + 23);
+  // Vertical column divider
+  doc.line(metaCardX + 64, metaCardY, metaCardX + 64, metaCardY + metaCardH);
 
-  // 6. Fix 1: Date & Invoice No. Outlined Fields ALIGNED WITH GSTIN AND PHONE
-  const dateBoxY = contactY - 8.5; // Perfectly aligns text baseline with GSTIN
-  const invNoBoxY = contactY + 12 - 8.5; // Perfectly aligns text baseline with Phone
-
-  doc.setDrawColor(0, 0, 0);
-  doc.setLineWidth(0.75);
-
-  // Date Label & Box (horizontally aligned with GSTIN row)
-  doc.setFont(fontName, 'normal');
-  doc.setFontSize(8.52);
-  doc.setTextColor(0, 0, 0);
-  doc.text('Date', fieldBoxX - 16, contactY, { align: 'right' });
-  doc.rect(fieldBoxX, dateBoxY, fieldBoxW, fieldBoxH, 'S');
-  const formattedDate = formatDateToIndian(invoice.date);
-  doc.text(formattedDate, fieldBoxX + fieldBoxW / 2, contactY, { align: 'center' });
-
-  // Invoice No. Label & Box (horizontally aligned with Phone row)
-  doc.text('Invoice No.', fieldBoxX - 12, contactY + 12, { align: 'right' });
-  doc.rect(fieldBoxX, invNoBoxY, fieldBoxW, fieldBoxH, 'S');
-  doc.text(invoice.invoiceNumber, fieldBoxX + fieldBoxW / 2, contactY + 12, { align: 'center' });
-
-  // 7. Bill To Box
-  const billToY = contactY + 47;
-  const billToW = 227; // Exactly 227 pt width
-  const billToHeaderH = 13.5;
-
-  // Header Bar
-  doc.setFillColor(navyColor.r, navyColor.g, navyColor.b);
-  doc.rect(marginX, billToY, billToW, billToHeaderH, 'F');
-  doc.rect(marginX, billToY, billToW, billToHeaderH, 'S');
-
+  // Row 1: Date
   doc.setFont(fontName, 'bold');
-  doc.setFontSize(8.52);
-  doc.setTextColor(255, 255, 255);
-  doc.text('Bill To :-', marginX + 6, billToY + 9.5);
+  doc.setFontSize(8);
+  doc.setTextColor(charcoalText.r, charcoalText.g, charcoalText.b);
+  doc.text('Date', metaCardX + 8, metaCardY + 15);
+  const formattedDate = formatDateToIndian(invoice.date);
+  doc.text(formattedDate, metaCardX + 64 + (metaCardW - 64) / 2, metaCardY + 15, { align: 'center' });
 
-  // Customer Name & Address Rows
-  doc.setFont(fontName, 'normal');
-  doc.setTextColor(0, 0, 0);
+  // Row 2: Invoice No
+  doc.text('Invoice No.', metaCardX + 8, metaCardY + 38);
+  doc.text(invoice.invoiceNumber || 'DJP/2026-27/01', metaCardX + 64 + (metaCardW - 64) / 2, metaCardY + 38, { align: 'center' });
 
-  const customerName = invoice.customerName.trim() || 'M/s. Brushspace';
+  // 9. Bill To Section
+  const billToY = contactY + 46;
+  const billToW = 236;
+  const customerName = invoice.customerName.trim() || 'M/s. BrainSpace';
   const customerAddress = invoice.customerAddress.trim();
-  const addressLines = doc.splitTextToSize(customerAddress, billToW - 12);
-
-  const row1H = 14;
-  const row2H = Math.max(26, addressLines.length * 11 + 4);
-  const row3H = 14;
-  const row4H = isTax ? 14 : 0;
-  const billToContentH = row1H + row2H + row3H + row4H;
-
-  // Outer border around Bill To body
-  doc.rect(marginX, billToY + billToHeaderH, billToW, billToContentH, 'S');
-  // Horizontal divider lines between rows
-  doc.line(marginX, billToY + billToHeaderH + row1H, marginX + billToW, billToY + billToHeaderH + row1H);
-  doc.line(marginX, billToY + billToHeaderH + row1H + row2H, marginX + billToW, billToY + billToHeaderH + row1H + row2H);
-  if (isTax) {
-    doc.line(
-      marginX,
-      billToY + billToHeaderH + row1H + row2H + row3H,
-      marginX + billToW,
-      billToY + billToHeaderH + row1H + row2H + row3H
-    );
-  }
-
-  // Row 1: Name
-  doc.text(customerName, marginX + 6, billToY + billToHeaderH + 10);
-
-  // Row 2: Address
-  let addrLineY = billToY + billToHeaderH + row1H + 10;
-  for (const line of addressLines) {
-    doc.text(line, marginX + 6, addrLineY);
-    addrLineY += 10.5;
-  }
-
-  // Row 3: Mobile
+  const addressLines = doc.splitTextToSize(customerAddress, billToW - 16);
   const mobileVal = invoice.customerMobile?.trim();
-  const mobileText = mobileVal ? `Mobile  :   ${mobileVal}` : 'Mobile  :   ';
-  doc.text(mobileText, marginX + 6, billToY + billToHeaderH + row1H + row2H + 10);
 
-  // Row 4: GSTIN (Tax Invoice only - bold label and value matching reference)
-  if (isTax) {
-    const customerGstinVal = invoice.customerGstin?.trim();
-    const gstinText = customerGstinVal ? `GSTIN   :   ${customerGstinVal}` : 'GSTIN   :   ';
-    doc.setFont(fontName, 'bold');
-    doc.text(gstinText, marginX + 6, billToY + billToHeaderH + row1H + row2H + row3H + 10);
-    doc.setFont(fontName, 'normal');
+  const billToBodyH = 14 + Math.max(22, addressLines.length * 10 + 4) + 12 + (isTax ? 12 : 0);
+
+  // Rounded outer border
+  doc.setDrawColor(goldBorderColor.r, goldBorderColor.g, goldBorderColor.b);
+  doc.setLineWidth(1.2);
+  doc.roundedRect(marginX, billToY, billToW, billToBodyH, 6, 6, 'S');
+
+  // Solid black tab at top-left: "Bill To :"
+  doc.setFillColor(darkHeaderBg.r, darkHeaderBg.g, darkHeaderBg.b);
+  doc.roundedRect(marginX, billToY, 68, 14, 3, 3, 'F');
+  doc.setFont(fontName, 'bold');
+  doc.setFontSize(8.2);
+  doc.setTextColor(goldHeaderTextColor.r, goldHeaderTextColor.g, goldHeaderTextColor.b);
+  doc.text('Bill To :', marginX + 8, billToY + 10);
+
+  // Client Details inside
+  doc.setFont(fontName, 'bold');
+  doc.setFontSize(9.5);
+  doc.setTextColor(charcoalText.r, charcoalText.g, charcoalText.b);
+  let billToLineY = billToY + 26;
+  doc.text(customerName, marginX + 8, billToLineY);
+
+  doc.setFont(fontName, 'normal');
+  doc.setFontSize(8);
+  doc.setTextColor(50, 50, 50);
+  billToLineY += 11;
+  for (const line of addressLines) {
+    doc.text(line, marginX + 8, billToLineY);
+    billToLineY += 9.5;
   }
 
-  // 8. Main Description Table
-  const tableY = billToY + billToHeaderH + billToContentH + 14;
+  doc.setFont(fontName, 'normal');
+  billToLineY += 2;
+  doc.text(`Mobile : ${mobileVal || '+91 88664 30075'}`, marginX + 8, billToLineY);
 
-  // Column Widths matching Brushspace.pdf: 73.3%, 10.2%, 16.5%
-  const colDescW = Math.round(tableWidth * 0.733); // ~378.4 pt
-  const colHsnW = Math.round(tableWidth * 0.102); // ~52.7 pt
-  const colAmountW = tableWidth - colDescW - colHsnW; // ~85.2 pt
+  if (isTax && invoice.customerGstin) {
+    billToLineY += 10.5;
+    doc.setFont(fontName, 'bold');
+    doc.text(`GSTIN : ${invoice.customerGstin.trim()}`, marginX + 8, billToLineY);
+  }
+
+  // 10. Itemized Table
+  const tableY = billToY + billToBodyH + 12;
+  const colDescW = Math.round(tableWidth * 0.73);
+  const colHsnW = Math.round(tableWidth * 0.11);
+  const colAmountW = tableWidth - colDescW - colHsnW;
 
   const col1X = marginX;
   const col2X = col1X + colDescW;
   const col3X = col2X + colHsnW;
   const colRightX = col1X + tableWidth;
+  const tableHeaderH = 18;
 
-  const tableHeaderH = 15;
-
-  // Table Header Bar
-  doc.setFillColor(navyColor.r, navyColor.g, navyColor.b);
-  doc.rect(col1X, tableY, tableWidth, tableHeaderH, 'F');
-  doc.rect(col1X, tableY, tableWidth, tableHeaderH, 'S');
+  // Black Table Header Bar with Gold Border
+  doc.setFillColor(darkHeaderBg.r, darkHeaderBg.g, darkHeaderBg.b);
+  doc.roundedRect(col1X, tableY, tableWidth, tableHeaderH, 4, 4, 'F');
+  doc.setDrawColor(goldBorderColor.r, goldBorderColor.g, goldBorderColor.b);
+  doc.setLineWidth(1.2);
+  doc.roundedRect(col1X, tableY, tableWidth, tableHeaderH, 4, 4, 'S');
 
   // Header column divider lines
+  doc.setDrawColor(50, 50, 50);
   doc.line(col2X, tableY, col2X, tableY + tableHeaderH);
   doc.line(col3X, tableY, col3X, tableY + tableHeaderH);
 
   // Header text
   doc.setFont(fontName, 'bold');
-  doc.setFontSize(9);
-  doc.setTextColor(255, 255, 255);
-  doc.text('DESCRIPTION', col1X + 8, tableY + 11);
-  doc.text('HSN/SAC', col2X + colHsnW / 2, tableY + 11, { align: 'center' });
-  doc.text('AMOUNT', colRightX - 8, tableY + 11, { align: 'right' });
+  doc.setFontSize(8.5);
+  doc.setTextColor(goldHeaderTextColor.r, goldHeaderTextColor.g, goldHeaderTextColor.b);
+  doc.text('DESCRIPTION', col1X + 10, tableY + 12.5);
+  doc.text('HSN/SAC', col2X + colHsnW / 2, tableY + 12.5, { align: 'center' });
+  doc.text('AMOUNT', colRightX - 10, tableY + 12.5, { align: 'right' });
 
-  // Calculate totals using shared calculation utility
+  // Calculate totals
   const totals = calculateInvoiceTotals({
     invoiceType: invoice.invoiceType,
     items: invoice.items,
@@ -329,7 +334,6 @@ export async function createInvoicePDFDocument(
     igstRate: invoice.igstRate,
   });
 
-  // Dynamic row structure
   interface TableRowDef {
     type: 'item' | 'blank' | 'cgst' | 'sgst' | 'igst';
     description: string;
@@ -343,21 +347,11 @@ export async function createInvoicePDFDocument(
   const maxDescW = colDescW - 16;
   const items = invoice.items || [];
 
-  // Leave only the first item row blank in the Description column (row 1 is blank)
-  tableRows.push({
-    type: 'blank',
-    description: '',
-    hsnSac: '',
-    amount: '',
-  });
-
-  // Display items consecutively starting from row 2 without skipping rows between items
   items.forEach((item) => {
     const descText = item.description || '';
     const lines = doc.splitTextToSize(descText, maxDescW);
     const descLines: string[] = lines.length > 0 ? lines : [''];
 
-    // Check if amount is actually provided or left blank
     const hasAmount =
       item.amount !== '' &&
       item.amount !== undefined &&
@@ -375,7 +369,7 @@ export async function createInvoicePDFDocument(
     });
   });
 
-  // For Tax Invoice, leave one blank line between items and tax rows if items exist (matching reference bill)
+  // Leave one blank line before tax breakdown
   if (isTax && items.length > 0) {
     tableRows.push({
       type: 'blank',
@@ -414,8 +408,8 @@ export async function createInvoicePDFDocument(
     }
   }
 
-  // Maintain minimum 11 rows to match the tall reference bill height
-  const minRows = 11;
+  // Minimum 8 rows
+  const minRows = 8;
   while (tableRows.length < minRows) {
     tableRows.push({
       type: 'blank',
@@ -425,38 +419,28 @@ export async function createInvoicePDFDocument(
     });
   }
 
-  const totalRowsCount = tableRows.length;
-
-  // Adjust row heights dynamically so text never overlaps, clips, or crosses table borders
-  const availableBodyH = 300;
-  const standardRowH = 13.5;
-  const rowH =
-    totalRowsCount * standardRowH > availableBodyH
-      ? Math.max(10, availableBodyH / totalRowsCount)
-      : standardRowH;
-  const bodyHeight = totalRowsCount * rowH;
-
+  const rowH = 15;
+  const bodyHeight = tableRows.length * rowH;
   let currentY = tableY + tableHeaderH;
 
-  // Draw rows and alternating grey backgrounds (#f1f1f1 on rows 1, 3, 5, etc.)
-  for (let i = 0; i < totalRowsCount; i++) {
+  // Draw rows with subtle alternating background
+  for (let i = 0; i < tableRows.length; i++) {
     const row = tableRows[i];
 
-    if (i % 2 === 1) {
-      doc.setFillColor(altRowColor.r, altRowColor.g, altRowColor.b);
+    if (i % 2 === 0) {
+      doc.setFillColor(altRowBg.r, altRowBg.g, altRowBg.b);
       doc.rect(col1X, currentY, tableWidth, rowH, 'F');
     }
 
     if (row.type !== 'blank') {
       doc.setFont(fontName, row.isBold ? 'bold' : 'normal');
-      doc.setFontSize(8.52);
-      doc.setTextColor(0, 0, 0);
+      doc.setFontSize(8.2);
+      doc.setTextColor(charcoalText.r, charcoalText.g, charcoalText.b);
 
       const textY = currentY + (rowH * 0.7);
 
-      // Description (left)
       if (row.description) {
-        let descX = col1X + 8;
+        let descX = col1X + 10;
         if (row.isSgstIndent) {
           doc.setFont(fontName, 'bold');
           const addPrefixWidth = doc.getTextWidth('Add: ');
@@ -465,195 +449,244 @@ export async function createInvoicePDFDocument(
         doc.text(row.description, descX, textY);
       }
 
-      // HSN/SAC (centered)
       if (row.hsnSac) {
         doc.text(row.hsnSac, col2X + colHsnW / 2, textY, { align: 'center' });
       }
 
-      // Amount (right aligned with 2 decimals when present)
       if (row.amount) {
-        doc.text(row.amount, colRightX - 8, textY, { align: 'right' });
+        doc.text(row.amount, colRightX - 10, textY, { align: 'right' });
       }
     }
 
     currentY += rowH;
   }
 
-  // Draw continuous outer border around table body
+  // Outer border around table body
+  doc.setDrawColor(goldBorderColor.r, goldBorderColor.g, goldBorderColor.b);
+  doc.setLineWidth(1.2);
   doc.rect(col1X, tableY + tableHeaderH, tableWidth, bodyHeight, 'S');
 
-  // Draw continuous vertical column divider lines through table body
+  // Column vertical dividers in table body
+  doc.setDrawColor(lightBorderColor.r, lightBorderColor.g, lightBorderColor.b);
+  doc.setLineWidth(0.8);
   doc.line(col2X, tableY + tableHeaderH, col2X, tableY + tableHeaderH + bodyHeight);
   doc.line(col3X, tableY + tableHeaderH, col3X, tableY + tableHeaderH + bodyHeight);
 
-  // Sub-Total / Total Row
-  const subtotalRowH = 15;
+  // Subtotal / Total Row at Table Bottom
+  const subtotalRowH = 18;
   const subtotalY = tableY + tableHeaderH + bodyHeight;
 
-  // Border around Sub-Total / Total and Amount cells
+  // Subtotal label and value cells with warm gold-beige background
+  doc.setFillColor(subtotalBg.r, subtotalBg.g, subtotalBg.b);
+  doc.rect(col2X, subtotalY, colHsnW + colAmountW, subtotalRowH, 'F');
+
+  doc.setDrawColor(goldBorderColor.r, goldBorderColor.g, goldBorderColor.b);
+  doc.setLineWidth(1.2);
   doc.rect(col2X, subtotalY, colHsnW, subtotalRowH, 'S');
   doc.rect(col3X, subtotalY, colAmountW, subtotalRowH, 'S');
 
   doc.setFont(fontName, 'bold');
-  doc.setFontSize(8.52);
-  doc.setTextColor(0, 0, 0);
+  doc.setFontSize(8.5);
+  doc.setTextColor(charcoalText.r, charcoalText.g, charcoalText.b);
   const bottomLabel = isTax ? 'Total' : 'Sub-Total';
-  doc.text(bottomLabel, col2X + 6, subtotalY + 11);
+  doc.text(bottomLabel, col2X + colHsnW / 2, subtotalY + 12.5, { align: 'center' });
 
   doc.setFont(fontName, 'bold');
   doc.setFontSize(9.5);
   const finalTotalStr = formatIndianCurrency(isTax ? totals.grandTotal : totals.subtotal);
-  doc.text(finalTotalStr, colRightX - 8, subtotalY + 11, { align: 'right' });
+  doc.text(finalTotalStr, colRightX - 10, subtotalY + 12.5, { align: 'right' });
 
-  // 9. Bottom Section: Payment Terms & Account Details on Left; SCAN AND PAY on Right
-  const bottomSectionY = subtotalY + subtotalRowH + 18;
-  const bottomWLeft = 348; // Exact width from stream 1: 347.8 pt
+  // 11. Bottom Section: Payment Terms & Account Details on Left; SCAN AND PAY on Right
+  const bottomSectionY = subtotalY + subtotalRowH + 12;
+  const bottomWLeft = 340;
 
-  // Payment Terms
-  const termsHeaderH = 13.5;
-  doc.setFillColor(navyColor.r, navyColor.g, navyColor.b);
-  doc.rect(marginX, bottomSectionY, bottomWLeft, termsHeaderH, 'F');
-  doc.rect(marginX, bottomSectionY, bottomWLeft, termsHeaderH, 'S');
+  // Payment Terms Card
+  const termsHeaderH = 14;
+  doc.setFillColor(darkHeaderBg.r, darkHeaderBg.g, darkHeaderBg.b);
+  doc.roundedRect(marginX, bottomSectionY, bottomWLeft, termsHeaderH, 4, 4, 'F');
+  doc.setDrawColor(goldBorderColor.r, goldBorderColor.g, goldBorderColor.b);
+  doc.setLineWidth(1);
+  doc.roundedRect(marginX, bottomSectionY, bottomWLeft, termsHeaderH, 4, 4, 'S');
 
   doc.setFont(fontName, 'bold');
-  doc.setFontSize(8.52);
-  doc.setTextColor(255, 255, 255);
-  doc.text('Payment Terms:', marginX + 6, bottomSectionY + 9.5);
+  doc.setFontSize(8.2);
+  doc.setTextColor(goldHeaderTextColor.r, goldHeaderTextColor.g, goldHeaderTextColor.b);
+  doc.text('Payment Terms:', marginX + 8, bottomSectionY + 10);
 
   const termsText = settings?.paymentTerms || '1. 50% Advance & Balance 50% after completion of work.';
-  const termsLines = doc.splitTextToSize(termsText, bottomWLeft - 12);
-  const termsContentH = Math.max(18, termsLines.length * 11 + 4);
+  const termsLines = doc.splitTextToSize(termsText, bottomWLeft - 16);
+  const termsContentH = Math.max(18, termsLines.length * 10 + 6);
 
-  doc.rect(marginX, bottomSectionY + termsHeaderH, bottomWLeft, termsContentH, 'S');
+  doc.setDrawColor(goldBorderColor.r, goldBorderColor.g, goldBorderColor.b);
+  doc.roundedRect(marginX, bottomSectionY + termsHeaderH, bottomWLeft, termsContentH, 4, 4, 'S');
+
   doc.setFont(fontName, 'normal');
-  doc.setTextColor(0, 0, 0);
-
-  let termLineY = bottomSectionY + termsHeaderH + 10;
+  doc.setFontSize(7.8);
+  doc.setTextColor(34, 34, 34);
+  let termLineY = bottomSectionY + termsHeaderH + 11;
   for (const line of termsLines) {
-    doc.text(line, marginX + 6, termLineY);
-    termLineY += 10.5;
+    doc.text(line, marginX + 8, termLineY);
+    termLineY += 9.5;
   }
 
-  // Account Details
-  const acctBoxY = bottomSectionY + termsHeaderH + termsContentH + 10;
-  const acctHeaderH = 13.5;
-  doc.setFillColor(navyColor.r, navyColor.g, navyColor.b);
-  doc.rect(marginX, acctBoxY, bottomWLeft, acctHeaderH, 'F');
-  doc.rect(marginX, acctBoxY, bottomWLeft, acctHeaderH, 'S');
+  // Account Details Card
+  const acctBoxY = bottomSectionY + termsHeaderH + termsContentH + 8;
+  const acctHeaderH = 14;
+  doc.setFillColor(darkHeaderBg.r, darkHeaderBg.g, darkHeaderBg.b);
+  doc.roundedRect(marginX, acctBoxY, bottomWLeft, acctHeaderH, 4, 4, 'F');
+  doc.setDrawColor(goldBorderColor.r, goldBorderColor.g, goldBorderColor.b);
+  doc.setLineWidth(1);
+  doc.roundedRect(marginX, acctBoxY, bottomWLeft, acctHeaderH, 4, 4, 'S');
 
   doc.setFont(fontName, 'bold');
-  doc.setFontSize(8.52);
-  doc.setTextColor(255, 255, 255);
-  doc.text('Account Details:', marginX + 6, acctBoxY + 9.5);
+  doc.setFontSize(8.2);
+  doc.setTextColor(goldHeaderTextColor.r, goldHeaderTextColor.g, goldHeaderTextColor.b);
+  doc.text('Account Details:', marginX + 8, acctBoxY + 10);
 
-  const acctContentH = 68;
-  doc.rect(marginX, acctBoxY + acctHeaderH, bottomWLeft, acctContentH, 'S');
+  const acctContentH = 62;
+  doc.roundedRect(marginX, acctBoxY + acctHeaderH, bottomWLeft, acctContentH, 4, 4, 'S');
+
+  doc.setFont(fontName, 'bold');
+  doc.setFontSize(8.5);
+  doc.setTextColor(charcoalText.r, charcoalText.g, charcoalText.b);
+  let acctLineY = acctBoxY + acctHeaderH + 11;
+  doc.text(settings?.bankName || 'Slice Small Finance Bank', marginX + 8, acctLineY);
 
   doc.setFont(fontName, 'normal');
-  doc.setTextColor(0, 0, 0);
-  let acctLineY = acctBoxY + acctHeaderH + 11;
-
-  doc.text(settings?.bankName || 'Slice Small Finance Bank', marginX + 6, acctLineY);
+  doc.setFontSize(7.8);
+  doc.setTextColor(50, 50, 50);
   acctLineY += 12;
 
-  doc.text('A/C No.-', marginX + 6, acctLineY);
-  doc.text(settings?.accountNo || '033311501053615', marginX + 56, acctLineY);
-  acctLineY += 12;
+  doc.text('A/C No.', marginX + 8, acctLineY);
+  doc.text(':', marginX + 54, acctLineY);
+  doc.setFont(fontName, 'bold');
+  doc.text(settings?.accountNo || '033911501053615', marginX + 62, acctLineY);
+  doc.setFont(fontName, 'normal');
+  acctLineY += 11;
 
-  doc.text('Name-', marginX + 6, acctLineY);
-  doc.text(settings?.accountHolderName || 'Deven Jha Productions', marginX + 56, acctLineY);
-  acctLineY += 12;
+  doc.text('Name', marginX + 8, acctLineY);
+  doc.text(':', marginX + 54, acctLineY);
+  doc.text(settings?.accountHolderName || 'Manshi Group of Services', marginX + 62, acctLineY);
+  acctLineY += 11;
 
-  doc.text('IFSC Code-', marginX + 6, acctLineY);
-  doc.text(settings?.ifscCode || 'NESF0000333', marginX + 56, acctLineY);
-  acctLineY += 12;
+  doc.text('IFSC Code', marginX + 8, acctLineY);
+  doc.text(':', marginX + 54, acctLineY);
+  doc.setFont(fontName, 'bold');
+  doc.text(settings?.ifscCode || 'NSF0000333', marginX + 62, acctLineY);
+  doc.setFont(fontName, 'normal');
+  acctLineY += 11;
 
-  doc.text('Branch-', marginX + 6, acctLineY);
-  doc.text(settings?.branch || 'Koramangala, Bengaluru', marginX + 56, acctLineY);
+  doc.text('Branch', marginX + 8, acctLineY);
+  doc.text(':', marginX + 54, acctLineY);
+  doc.text(settings?.branch || 'Koramangala, Bengaluru', marginX + 62, acctLineY);
 
-  // 10. SCAN AND PAY (Right Side)
-  const qrAreaW = 124;
-  const qrX = pageWidth - marginX - qrAreaW;
-  const qrTopY = bottomSectionY + 2;
+  // 12. SCAN AND PAY (Right Column)
+  const qrCardW = 126;
+  const qrX = pageWidth - marginX - qrCardW;
+  const qrTopY = bottomSectionY;
+
+  // Header: — SCAN AND PAY —
+  doc.setDrawColor(goldBorderColor.r, goldBorderColor.g, goldBorderColor.b);
+  doc.setLineWidth(0.8);
+  doc.line(qrX, qrTopY + 5, qrX + 18, qrTopY + 5);
+  doc.line(qrX + qrCardW - 18, qrTopY + 5, qrX + qrCardW, qrTopY + 5);
 
   doc.setFont(fontName, 'bold');
-  doc.setFontSize(12);
-  doc.setTextColor(0, 0, 0);
-  doc.text('SCAN AND PAY', qrX + qrAreaW / 2, qrTopY + 10, { align: 'center' });
+  doc.setFontSize(8.5);
+  doc.setTextColor(charcoalText.r, charcoalText.g, charcoalText.b);
+  doc.text('SCAN AND PAY', qrX + qrCardW / 2, qrTopY + 8, { align: 'center' });
 
-  // QR Scanner Image
+  // QR Card Box
+  const qrBoxY = qrTopY + 14;
+  const qrBoxH = 118;
+  doc.setDrawColor(goldBorderColor.r, goldBorderColor.g, goldBorderColor.b);
+  doc.setLineWidth(1.2);
+  doc.roundedRect(qrX, qrBoxY, qrCardW, qrBoxH, 8, 8, 'S');
+
+  // QR Image
   const qrUrl = settings?.qrScannerUrl || settings?.qrScannerDataUrl || '/assets/qr_scanner.jpg';
   try {
     const qrData = await fetchImageAsDataUrl(qrUrl);
     if (qrData) {
-      const qrImgW = 124;
-      const qrImgH = 129;
-      doc.addImage(qrData, 'JPEG', qrX, qrTopY + 16, qrImgW, qrImgH);
+      doc.addImage(qrData, 'JPEG', qrX + 16, qrBoxY + 8, 94, 94);
     }
   } catch (err) {
     console.warn('Error adding QR scanner to PDF:', err);
   }
 
-  // 11. Digital Signature Badge (Bottom Right, below QR Scanner)
-  const qrBottomY = qrTopY + 16 + 129;
-  const badgeW = 124;
-  const badgeH = 34;
-  const badgeX = qrX;
-  const badgeY = qrBottomY + 9;
-  const badgeRadius = 3;
+  // "UPI Accepted Here"
+  doc.setFont(fontName, 'normal');
+  doc.setFontSize(6.8);
+  doc.setTextColor(80, 80, 80);
+  doc.text('UPI Accepted Here', qrX + qrCardW / 2, qrBoxY + 107, { align: 'center' });
 
-  // Background & border: subtle rounded card matching invoice styling
-  doc.setFillColor(245, 247, 251); // #f5f7fb soft navy tint
-  doc.setDrawColor(navyColor.r, navyColor.g, navyColor.b); // #3a4e86
-  doc.setLineWidth(0.65);
-  doc.roundedRect(badgeX, badgeY, badgeW, badgeH, badgeRadius, badgeRadius, 'FD');
+  // BHIM UPI Badge Text
+  doc.setFont(fontName, 'bolditalic');
+  doc.setFontSize(7.5);
+  doc.setTextColor(charcoalText.r, charcoalText.g, charcoalText.b);
+  doc.text('BHIM  UPI', qrX + qrCardW / 2, qrBoxY + 115, { align: 'center' });
 
-  // Verified Icon: navy circle with crisp white checkmark
-  const iconCenterX = badgeX + 15;
-  const iconCenterY = badgeY + badgeH / 2;
-  const iconRadius = 7.5;
+  // 13. Digital Signature Badge (Below QR Card)
+  const badgeY = qrBoxY + qrBoxH + 6;
+  const badgeH = 26;
 
-  doc.setFillColor(navyColor.r, navyColor.g, navyColor.b);
-  doc.circle(iconCenterX, iconCenterY, iconRadius, 'F');
+  doc.setFillColor(darkHeaderBg.r, darkHeaderBg.g, darkHeaderBg.b);
+  doc.roundedRect(qrX, badgeY, qrCardW, badgeH, 6, 6, 'F');
+  doc.setDrawColor(40, 45, 55);
+  doc.setLineWidth(0.8);
+  doc.roundedRect(qrX, badgeY, qrCardW, badgeH, 6, 6, 'S');
 
-  // Crisp white checkmark
+  // Blue verified circle with checkmark
+  doc.setFillColor(37, 99, 235);
+  doc.circle(qrX + 14, badgeY + badgeH / 2, 6, 'F');
   doc.setDrawColor(255, 255, 255);
-  doc.setLineWidth(1.3);
-  doc.line(iconCenterX - 3.4, iconCenterY - 0.2, iconCenterX - 0.8, iconCenterY + 2.6);
-  doc.line(iconCenterX - 0.8, iconCenterY + 2.6, iconCenterX + 3.8, iconCenterY - 2.8);
+  doc.setLineWidth(1.2);
+  doc.line(qrX + 11.5, badgeY + 13, qrX + 13.5, badgeY + 15);
+  doc.line(qrX + 13.5, badgeY + 15, qrX + 16.5, badgeY + 11);
 
-  // Badge Text
-  const textStartX = badgeX + 27;
   doc.setFont(fontName, 'bold');
-  doc.setFontSize(8.2);
-  doc.setTextColor(companyTitleColor.r, companyTitleColor.g, companyTitleColor.b);
-  doc.text('Digitally Signed', textStartX, badgeY + 14.5);
+  doc.setFontSize(6.8);
+  doc.setTextColor(255, 255, 255);
+  doc.text('Digitally Signed By', qrX + 26, badgeY + 10.5);
 
   doc.setFont(fontName, 'normal');
-  doc.setFontSize(7.2);
-  doc.setTextColor(80, 80, 80);
-  doc.text('Authorized Signatory', textStartX, badgeY + 25.5);
+  doc.setFontSize(5.8);
+  doc.setTextColor(148, 163, 184);
+  doc.text('Authorized Signatory', qrX + 26, badgeY + 19.5);
 
-  // 12. Thank You Footer (Positioned cleanly below both columns)
-  const acctBottomY = acctBoxY + acctHeaderH + acctContentH;
-  const badgeBottomY = badgeY + badgeH;
-  const footerY = Math.max(acctBottomY + 24, badgeBottomY + 18);
+  // 14. Refined Cinematic Footer (Script & Tagline)
+  const footerY = Math.max(acctBoxY + acctHeaderH + acctContentH + 16, badgeY + badgeH + 12);
 
   doc.setFont(fontName, 'bolditalic');
-  doc.setFontSize(11);
-  doc.setTextColor(0, 0, 0);
-  doc.text('Thank You For Your Business! Eager to Serve You Again', marginX, footerY);
+  doc.setFontSize(15);
+  doc.setTextColor(197, 155, 39); // rich warm gold
+  doc.text('Thank You For Your Business!', pageWidth / 2, footerY, { align: 'center' });
+
+  doc.setFont(fontName, 'normal');
+  doc.setFontSize(7.8);
+  doc.setTextColor(80, 80, 80);
+  doc.text("Together, Let's Create Something Extraordinary...", pageWidth / 2, footerY + 11, { align: 'center' });
+
+  // 15. Bottom Black Bar with Gold Star and Dividers
+  const bottomBarH = 24;
+  const bottomBarY = pageHeight - bottomBarH;
+
+  doc.setFillColor(8, 8, 10);
+  doc.rect(0, bottomBarY, pageWidth, bottomBarH, 'F');
+  doc.setDrawColor(goldBorderColor.r, goldBorderColor.g, goldBorderColor.b);
+  doc.setLineWidth(1);
+  doc.line(0, bottomBarY, pageWidth, bottomBarY);
+
+  doc.setFont(fontName, 'bold');
+  doc.setFontSize(8.2);
+  doc.setTextColor(goldHeaderTextColor.r, goldHeaderTextColor.g, goldHeaderTextColor.b);
+  doc.text('★ Deven Jha Productions    |    Professional Services    |    Creative Excellence', pageWidth / 2, bottomBarY + 15, { align: 'center' });
 
   return doc;
 }
 
 /**
- * Sanitizes a customer or business name for use in filesystem filenames:
- * - Strips control characters
- * - Replaces invalid filesystem characters (/ \ ? % * : | " < >) with a hyphen
- * - Collapses consecutive hyphens and whitespace
- * - Trims leading and trailing hyphens, periods, and spaces
- * - Falls back to 'Customer' if the name is empty or contains only invalid characters
+ * Sanitizes a customer or business name for use in filesystem filenames
  */
 export function sanitizeCustomerNameForFilename(customerName?: string): string {
   if (!customerName) return 'Customer';
@@ -669,13 +702,7 @@ export function sanitizeCustomerNameForFilename(customerName?: string): string {
 }
 
 /**
- * Returns the standardized PDF filename for an invoice:
- * - Regular Invoice: `[Customer-Business-Name] Invoice.pdf`
- * - Tax Invoice: `[Customer-Business-Name] Tax Invoice.pdf`
- *
- * If duplicate detection is requested or if `appendInvoiceNumber` is true (e.g. for batch/monthly backups
- * where multiple invoices have the same customer name), the invoice number is appended to prevent overwriting:
- * `[Customer-Business-Name] [Tax] Invoice - [InvoiceNo].pdf`
+ * Returns the standardized PDF filename for an invoice
  */
 export function getInvoicePdfFilename(
   invoice: { customerName?: string; invoiceType?: InvoiceType; invoiceNumber?: string },
@@ -706,15 +733,10 @@ export function getInvoicePdfFilename(
   return finalName;
 }
 
-/**
- * Generates unique PDF filenames for an array of invoices (e.g. monthly backups / batch downloads).
- * If multiple invoices have the same customer name and invoice type, appends the invoice number
- * to ensure no files are overwritten.
- */
 export function getUniqueInvoicePdfFilenames(
   invoices: InvoiceRecord[]
 ): Map<string, string> {
-  const result = new Map<string, string>(); // invoice.id -> unique filename
+  const result = new Map<string, string>();
   const counts = new Map<string, number>();
 
   for (const inv of invoices) {
@@ -736,12 +758,6 @@ export function getUniqueInvoicePdfFilenames(
   return result;
 }
 
-/**
- * Sanitizes a filename for filesystem download:
- * - Replaces illegal characters [/\\?%*:|"<>]/g with '-'
- * - Collapses consecutive spaces
- * - Ensures it ends with '.pdf'
- */
 export function sanitizePdfFilename(filename: string): string {
   let cleaned = (filename || '')
     .trim()
@@ -749,12 +765,10 @@ export function sanitizePdfFilename(filename: string): string {
     .replace(/\s+/g, ' ')
     .trim();
 
-  // Strip existing .pdf extension if present to sanitize base name cleanly
   if (cleaned.toLowerCase().endsWith('.pdf')) {
     cleaned = cleaned.slice(0, -4).trim();
   }
 
-  // Remove leading/trailing dashes or dots
   cleaned = cleaned.replace(/^[-. ]+|[-. ]+$/g, '').trim();
 
   if (!cleaned) {
@@ -764,10 +778,6 @@ export function sanitizePdfFilename(filename: string): string {
   return `${cleaned}.pdf`;
 }
 
-/**
- * Generates a sensible default PDF filename based on the customer name and invoice number:
- * e.g. "Brushspace Invoice - MGS-2026-27-01.pdf"
- */
 export function formatDefaultPdfFilename(
   customerName?: string,
   invoiceNumber?: string,
@@ -784,12 +794,51 @@ export function formatDefaultPdfFilename(
   return `${customer} ${typeLabel}.pdf`;
 }
 
+/**
+ * Downloads the invoice as a pristine A4 PDF.
+ * If the styled DOM invoice element is currently rendered in the document,
+ * captures it using html2canvas at high DPI (2.5x) for an exact 1:1 match
+ * with the on-screen preview and browser print.
+ * Falls back to createInvoicePDFDocument if the element is not found.
+ */
 export async function downloadInvoicePDF(
   invoice: InvoiceRecord,
   companySettings?: CompanySettings,
   customFilename?: string
 ): Promise<void> {
-  const doc = await createInvoicePDFDocument(invoice, companySettings);
   const filename = customFilename ? sanitizePdfFilename(customFilename) : getInvoicePdfFilename(invoice);
+
+  // Check if live rendered invoice element is in the DOM
+  const printableArea = typeof document !== 'undefined'
+    ? document.getElementById('invoice-printable-area')
+    : null;
+
+  if (printableArea) {
+    try {
+      const canvas = await html2canvas(printableArea, {
+        scale: 2.5, // Crisp 300+ DPI print quality
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#ffffff',
+        logging: false,
+      });
+
+      const imgData = canvas.toDataURL('image/jpeg', 0.98);
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'pt',
+        format: 'a4', // 595.28 x 841.89 pt
+      });
+
+      pdf.addImage(imgData, 'JPEG', 0, 0, 595.28, 841.89);
+      pdf.save(filename);
+      return;
+    } catch (err) {
+      console.warn('html2canvas capture failed, falling back to direct PDF document generator:', err);
+    }
+  }
+
+  // Fallback: Direct vector generator
+  const doc = await createInvoicePDFDocument(invoice, companySettings);
   doc.save(filename);
 }

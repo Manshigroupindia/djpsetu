@@ -1,4 +1,9 @@
-/* Trebuchet MS Invoice Stylesheet strictly matching Brushspace reference screenshot */
+/* ========================================================================= */
+/* DEVEN JHA PRODUCTIONS - PREMIUM FILM-INDUSTRY INVOICE STYLESHEET           */
+/* Recreated to match the reference invoice design closely                   */
+/* ========================================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Great+Vibes&family=Montserrat:wght@400;500;600;700;800&display=swap');
 
 @font-face {
   font-family: 'Trebuchet MS Local';
@@ -28,45 +33,90 @@
   font-style: italic;
 }
 
+/* Scaler container for interactive preview */
 .invoice-document-scaler {
   display: flex;
   justify-content: center;
   align-items: flex-start;
   transition: transform 0.15s ease-out;
+  padding: 10px 0;
 }
 
-.invoice-document.a4-sheet {
+/* Authentic A4 Sheet Dimensions: 210mm x 297mm */
+.invoice-document.a4-sheet.film-edition {
   width: 210mm;
+  height: 297mm;
   min-height: 297mm;
-  padding: 13mm 14mm 12mm 14mm;
+  max-height: 297mm;
+  padding: 10mm 14mm 24mm 14mm;
   background-color: #ffffff;
-  color: #000000;
+  color: #111111;
   box-sizing: border-box;
-  font-family: 'Trebuchet MS Local', 'Trebuchet MS', 'Lucida Sans Unicode', sans-serif;
-  font-size: 8.52pt;
-  line-height: 1.32;
-  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.15);
+  font-family: 'Montserrat', 'Trebuchet MS Local', 'Trebuchet MS', sans-serif;
+  font-size: 8.5pt;
+  line-height: 1.35;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18), 0 0 1px rgba(0, 0, 0, 0.2);
   position: relative;
   margin: 0 auto;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
-/* 1. Top Section: Logo & Company Name beside it; INVOICE title on top right */
+/* Background Top Gold Wave */
+.inv-top-wave {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 52%;
+  height: 48px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.inv-wave-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Background Cinematic Watermark: Clapperboard & 35mm Reel */
+.inv-watermark {
+  position: absolute;
+  top: 130px;
+  right: 20px;
+  width: 440px;
+  height: 350px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.inv-watermark-svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* ========================================================================= */
+/* 1. TOP HEADER ROW                                                         */
+/* ========================================================================= */
 .inv-top-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
+  position: relative;
+  z-index: 2;
 }
 
 .inv-company-header-group {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 0;
 }
 
 .inv-logo-box {
-  width: 74px;
-  height: 64px;
+  width: 68px;
+  height: 60px;
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -79,6 +129,28 @@
   object-fit: contain;
 }
 
+.inv-logo-placeholder {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: #111;
+  color: #d4af37;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14pt;
+  border: 2px solid #d4af37;
+}
+
+.inv-header-divider {
+  width: 1.5px;
+  height: 44px;
+  background: #c5a059;
+  margin: 0 14px;
+  opacity: 0.8;
+}
+
 .inv-company-title-wrap {
   display: flex;
   align-items: center;
@@ -86,200 +158,320 @@
 
 .inv-company-name {
   margin: 0;
-  font-size: 20.5pt;
-  font-weight: bold;
-  color: #1d3d6e;
-  letter-spacing: -0.2px;
-  line-height: 1.15;
+  font-family: 'Cinzel', 'Playfair Display', Georgia, serif;
+  font-size: 21pt;
+  font-weight: 700;
+  color: #111111;
+  letter-spacing: 0.5px;
+  line-height: 1.1;
+}
+
+/* INVOICE Title on Top Right */
+.inv-heading-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding-right: 4px;
 }
 
 .inv-title {
-  font-size: 22.5pt;
-  font-weight: bold;
-  color: #798dc5;
-  letter-spacing: 0.5px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 23pt;
+  font-weight: 800;
+  color: #0d0d0f;
+  letter-spacing: 1.2px;
+  line-height: 1;
   margin: 0;
 }
 
-/* 2. Fix 2: Company Address block DIRECTLY BELOW Logo, starting from left margin */
-.inv-company-address {
-  font-size: 8.52pt;
-  color: #000000;
-  line-height: 1.32;
-  margin-bottom: 8px;
+.inv-title-gold-bar {
+  width: 58px;
+  height: 3px;
+  background: linear-gradient(90deg, #d4af37, #fcedb9);
+  border-radius: 2px;
+  margin-top: 5px;
 }
 
-/* 3. Fix 1: Middle Row with GSTIN/Phone/Email/Website on Left; Date & Invoice No aligned on Right */
-.inv-middle-row {
+/* ========================================================================= */
+/* 2. SUB-HEADER ROW: Address & Contacts (Left) | Date & Inv No Card (Right)  */
+/* ========================================================================= */
+.inv-sub-header-row {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
+  position: relative;
+  z-index: 2;
 }
 
-.inv-company-contact {
+.inv-company-details {
   display: flex;
   flex-direction: column;
+}
+
+.inv-company-address {
+  font-size: 8.2pt;
+  color: #222222;
+  line-height: 1.35;
+  margin-bottom: 6px;
+  font-weight: 400;
+}
+
+.inv-contact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5px;
 }
 
 .inv-contact-line {
   display: flex;
-  height: 17px;
-  line-height: 17px;
-  margin-bottom: 3.5px;
+  align-items: center;
+  font-size: 8.2pt;
+  line-height: 1.3;
+}
+
+.inv-icon-pill {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #111111;
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 6px;
+  flex-shrink: 0;
+}
+
+.inv-mini-badge {
+  font-size: 6.5pt;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1;
+}
+
+.inv-mini-icon {
+  width: 9px;
+  height: 9px;
+  stroke: #ffffff;
 }
 
 .inv-contact-label {
-  width: 58px;
-  min-width: 58px;
-  flex-shrink: 0;
-  display: inline-block;
+  width: 52px;
+  font-weight: 600;
+  color: #111111;
 }
 
-.inv-label-bold {
-  font-weight: bold;
+.inv-contact-colon {
+  width: 12px;
+  text-align: center;
+  font-weight: 600;
+  color: #111111;
 }
 
 .inv-contact-val {
-  display: inline-block;
+  color: #222222;
+  font-weight: 500;
 }
 
 .inv-val-bold {
-  font-weight: bold;
+  font-weight: 700;
+  color: #111111;
 }
 
-.inv-link-text a,
-.inv-link-label a,
-.inv-link-val a {
-  color: #3a4e86;
-  text-decoration: underline;
-}
-
-.inv-link-val {
-  max-width: 320px;
+/* Date & Invoice No Card on Right */
+.inv-meta-card {
+  width: 185px;
+  border: 1.5px solid #c5a059;
+  border-radius: 8px;
+  background: #ffffff;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  box-shadow: 0 1px 4px rgba(197, 160, 89, 0.12);
+  margin-top: 4px;
 }
 
-/* Date & Invoice No. Outlined Fields aligned with GSTIN and Phone */
-.inv-meta-block {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-}
-
-.inv-field-row {
+.inv-meta-card-row {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: 12px;
-  height: 17px;
-  margin-bottom: 3.5px;
-}
-
-.inv-field-label {
-  font-size: 8.52pt;
-  color: #000000;
-  text-align: right;
-  line-height: 17px;
-}
-
-.inv-field-box {
-  width: 116px;
-  height: 17px;
-  border: 1px solid #000000;
-  background-color: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 8.52pt;
-  color: #000000;
+  justify-content: space-between;
+  height: 25px;
   box-sizing: border-box;
 }
 
-/* 4. Bill To Section */
-.inv-bill-to-section {
-  width: 302px;
-  margin-bottom: 14px;
+.inv-meta-card-row:first-child {
+  border-bottom: 1px solid #e5c07b;
 }
 
-.inv-box-header {
-  background-color: #3a4e86;
-  color: #ffffff;
-  font-weight: bold;
-  font-size: 8.52pt;
-  padding: 2.5px 8px;
-  border: 1px solid #000000;
-  border-bottom: none;
+.inv-meta-cell-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 8px;
+  font-size: 7.8pt;
+  font-weight: 600;
+  color: #111111;
+  width: 78px;
+  flex-shrink: 0;
+  border-right: 1px solid #e5c07b;
+  height: 100%;
+}
+
+.inv-meta-icon {
+  width: 11px;
+  height: 11px;
+  stroke: #111111;
+}
+
+.inv-meta-cell-value {
+  flex: 1;
+  text-align: center;
+  font-size: 8.2pt;
+  font-weight: 600;
+  color: #111111;
+  padding: 0 4px;
+}
+
+.inv-invno-val {
+  letter-spacing: 0.3px;
+}
+
+/* ========================================================================= */
+/* 3. BILL TO SECTION                                                        */
+/* ========================================================================= */
+.inv-bill-to-section {
+  width: 330px;
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 2;
+}
+
+.inv-bill-to-card {
+  border: 1.5px solid #c5a059;
+  border-radius: 8px;
+  background: #ffffff;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(197, 160, 89, 0.1);
+}
+
+.inv-bill-to-header-tab {
+  background: #0c0d10;
+  color: #e5c07b;
+  font-weight: 700;
+  font-size: 8.2pt;
+  letter-spacing: 0.5px;
+  display: inline-block;
+  padding: 2.5px 14px 3px 10px;
+  border-radius: 0 0 8px 0;
 }
 
 .inv-bill-to-body {
-  border: 1px solid #000000;
-  font-size: 8.52pt;
+  padding: 6px 12px 8px 12px;
+  font-size: 8.2pt;
 }
 
-.inv-bill-to-row {
-  padding: 2.5px 8px;
-  border-bottom: 1px solid #000000;
-}
-
-.inv-bill-to-row:last-child {
-  border-bottom: none;
+.inv-bill-to-name {
+  font-weight: 700;
+  font-size: 10pt;
+  color: #0c0d10;
+  margin-bottom: 3px;
 }
 
 .inv-bill-to-address {
-  min-height: 32px;
   line-height: 1.35;
+  color: #333333;
+  margin-bottom: 3px;
 }
 
+.inv-bill-to-mobile,
 .inv-bill-to-gstin {
-  font-weight: bold;
+  line-height: 1.35;
+  color: #111111;
 }
 
-/* 5. Main Description Table */
+.inv-lbl-muted {
+  color: #555555;
+  font-weight: 600;
+}
+
+/* ========================================================================= */
+/* 4. ITEMIZED BILLING TABLE                                                 */
+/* ========================================================================= */
 .inv-items-table-wrapper {
-  margin-bottom: 16px;
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 2;
 }
 
 .inv-items-table {
   width: 100%;
-  border-collapse: collapse;
-  border: 1px solid #000000;
-  font-size: 8.52pt;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1.5px solid #c5a059;
+  border-radius: 6px;
+  overflow: hidden;
+  font-size: 8.2pt;
+}
+
+.inv-items-table thead tr {
+  background: #0c0d10;
 }
 
 .inv-items-table th {
-  background-color: #3a4e86;
-  color: #ffffff;
-  font-weight: bold;
-  font-size: 9pt;
-  padding: 3.5px 8px;
-  border: 1px solid #000000;
+  color: #e5c07b;
+  font-weight: 700;
+  font-size: 8.5pt;
+  letter-spacing: 0.6px;
+  padding: 5px 10px;
+  border-bottom: 1.5px solid #c5a059;
+}
+
+.th-desc-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.th-icon {
+  width: 12px;
+  height: 12px;
+  stroke: #e5c07b;
+}
+
+.inv-items-table th.col-desc {
+  border-right: 1px solid #333333;
+}
+
+.inv-items-table th.col-hsn {
+  border-right: 1px solid #333333;
 }
 
 .inv-items-table td {
-  padding: 2.5px 8px;
-  height: 18px;
+  padding: 4px 10px;
+  height: 20px;
   box-sizing: border-box;
-  /* NO horizontal borders between body rows matching screenshot */
-  border-left: 1px solid #000000;
-  border-right: 1px solid #000000;
+  border-right: 1px solid #e8dcce;
+  border-bottom: 1px solid #f2e9dc;
+}
+
+.inv-items-table td:last-child {
+  border-right: none;
 }
 
 .col-desc {
-  width: 73.3%;
+  width: 73%;
   text-align: left;
 }
 
 .col-hsn {
-  width: 10.2%;
+  width: 11%;
   text-align: center;
 }
 
 .col-amount {
-  width: 16.5%;
+  width: 16%;
   text-align: right;
+  font-feature-settings: 'tnum';
 }
 
 .row-white {
@@ -287,119 +479,188 @@
 }
 
 .row-stripe {
-  background-color: #f1f1f1; /* 0.945 grayscale from reference stream */
+  background-color: #fbf8f2;
 }
 
-/* Subtotal Row */
+.sgst-indent-wrap {
+  display: inline-block;
+}
+
+.sgst-indent-spacer {
+  visibility: hidden;
+}
+
+/* Subtotal Row at Table Bottom */
 .subtotal-row {
-  border-top: 1px solid #000000;
+  border-top: 1.5px solid #c5a059;
 }
 
 .subtotal-row td {
-  height: 20px;
+  height: 23px;
+  border-bottom: none;
 }
 
 .subtotal-empty-cell {
-  border-left: none !important;
-  border-right: 1px solid #000000 !important;
-  border-top: 1px solid #000000;
-  border-bottom: 1px solid #000000;
+  background: #ffffff;
+  border-right: 1px solid #c5a059 !important;
 }
 
 .subtotal-label {
-  font-weight: bold;
-  font-size: 8.52pt;
-  text-align: left;
-  border: 1px solid #000000 !important;
+  font-weight: 700;
+  font-size: 8.5pt;
+  text-align: center;
+  background: #f5ebd8;
+  color: #111111;
+  border-right: 1px solid #c5a059 !important;
 }
 
 .subtotal-value {
-  font-weight: bold;
+  font-weight: 800;
   font-size: 9.5pt;
   text-align: right;
-  border: 1px solid #000000 !important;
+  background: #f5ebd8;
+  color: #111111;
 }
 
-/* 6. Bottom Section: Payment terms & Bank details on Left, QR on Right */
+/* ========================================================================= */
+/* 5. BOTTOM SECTION: Payment Terms & Account Details (Left) | QR & Badge (Right) */
+/* ========================================================================= */
 .inv-bottom-section {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 20px;
+  gap: 16px;
+  position: relative;
+  z-index: 2;
+  margin-bottom: 4px;
 }
 
 .inv-bottom-left {
   flex: 1;
-  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.inv-terms-box {
-  margin-bottom: 10px;
+/* Card Header Bars & Body Boxes */
+.inv-card-header-bar {
+  background: #0c0d10;
+  color: #e5c07b;
+  font-weight: 700;
+  font-size: 8.2pt;
+  letter-spacing: 0.4px;
+  padding: 3.5px 10px;
+  border: 1.2px solid #c5a059;
+  border-bottom: none;
+  border-radius: 6px 6px 0 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.card-header-icon {
+  width: 11px;
+  height: 11px;
+  stroke: #e5c07b;
+}
+
+.inv-card-body-box {
+  border: 1.2px solid #c5a059;
+  border-radius: 0 0 6px 6px;
+  background: #ffffff;
+  padding: 5px 10px;
+  box-shadow: 0 1px 3px rgba(197, 160, 89, 0.08);
 }
 
 .inv-terms-body {
-  border: 1px solid #000000;
-  padding: 3.5px 8px;
-  font-size: 8.52pt;
+  font-size: 8pt;
   line-height: 1.35;
+  color: #222222;
   min-height: 22px;
 }
 
-.inv-account-box {
-  margin-bottom: 12px;
-}
-
-.inv-account-body {
-  border: 1px solid #000000;
-  padding: 4px 8px;
-  font-size: 8.52pt;
-  line-height: 1.4;
-}
-
 .inv-bank-name {
-  margin-bottom: 2px;
+  font-weight: 700;
+  font-size: 9pt;
+  color: #111111;
+  margin-bottom: 3px;
+}
+
+.inv-acct-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 8pt;
 }
 
 .inv-acct-row {
   display: flex;
+  align-items: center;
 }
 
 .inv-acct-lbl {
-  width: 76px;
-  flex-shrink: 0;
+  width: 72px;
+  color: #333333;
+}
+
+.inv-acct-colon {
+  width: 12px;
+  text-align: center;
+  color: #333333;
 }
 
 .inv-acct-val {
-  flex: 1;
+  color: #111111;
 }
 
-.inv-footer-thankyou {
-  font-size: 11pt;
-  font-weight: bold;
-  font-style: italic;
-  color: #000000;
-  margin-top: 18px;
-}
-
-/* Right side QR */
+/* Right Side: SCAN AND PAY & Digital Signature */
 .inv-bottom-right {
-  width: 170px;
+  width: 165px;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
+.inv-scan-header-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  margin-bottom: 4px;
+}
+
+.inv-scan-line {
+  flex: 1;
+  height: 1px;
+  background: #c5a059;
+}
+
 .inv-scan-title {
-  font-size: 12pt;
-  font-weight: bold;
-  color: #000000;
-  margin-bottom: 6px;
-  text-align: center;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8.8pt;
+  font-weight: 800;
+  color: #111111;
+  letter-spacing: 0.8px;
+  white-space: nowrap;
 }
 
 .inv-qr-card {
-  width: 165px;
-  height: 172px;
+  width: 145px;
+  border: 1.5px solid #c5a059;
+  border-radius: 12px;
+  background: #ffffff;
+  padding: 8px 8px 6px 8px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 2px 6px rgba(197, 160, 89, 0.12);
+}
+
+.inv-qr-frame {
+  width: 108px;
+  height: 108px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -411,35 +672,82 @@
   object-fit: contain;
 }
 
-/* Digital Signature Badge in Bottom Right */
-.inv-digital-signature-badge {
-  width: 165px;
-  height: 46px;
-  background-color: #f5f7fb;
-  border: 1px solid #3a4e86;
-  border-radius: 4px;
+.inv-qr-placeholder {
+  width: 100px;
+  height: 100px;
+  border: 1px dashed #c5a059;
   display: flex;
   align-items: center;
-  padding: 5px 8px;
+  justify-content: center;
+  color: #888;
+  font-size: 7.5pt;
+}
+
+.inv-upi-label {
+  font-size: 7.2pt;
+  font-weight: 600;
+  color: #444444;
+  margin-top: 4px;
+  text-align: center;
+}
+
+.inv-bhim-upi-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+.bhim-text {
+  font-size: 8pt;
+  font-weight: 900;
+  color: #2b323c;
+  font-style: italic;
+  letter-spacing: -0.2px;
+}
+
+.upi-arrows {
+  display: inline-flex;
+  align-items: center;
+}
+
+.upi-text {
+  font-size: 8pt;
+  font-weight: 900;
+  color: #1b2028;
+  letter-spacing: 0.2px;
+}
+
+/* Digital Signature Badge */
+.inv-digital-signature-badge {
+  width: 145px;
+  height: 32px;
+  background-color: #0c0f14;
+  border: 1px solid #252b36;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  padding: 3px 8px;
   box-sizing: border-box;
-  margin-top: 10px;
-  gap: 8px;
+  margin-top: 6px;
+  gap: 7px;
 }
 
 .inv-badge-icon-circle {
-  width: 20px;
-  height: 20px;
+  width: 17px;
+  height: 17px;
   border-radius: 50%;
-  background-color: #3a4e86;
+  background-color: #2563eb;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
 }
 
-.inv-badge-icon-svg {
-  width: 14px;
-  height: 14px;
+.inv-check-icon {
+  width: 10px;
+  height: 10px;
+  stroke: #ffffff;
 }
 
 .inv-badge-text-block {
@@ -450,29 +758,82 @@
 }
 
 .inv-badge-title {
-  font-weight: bold;
-  font-size: 8.2pt;
-  color: #2c3964;
-  line-height: 1.2;
+  font-weight: 700;
+  font-size: 6.8pt;
+  color: #ffffff;
+  line-height: 1.1;
+  letter-spacing: 0.2px;
 }
 
 .inv-badge-subtitle {
-  font-size: 7.2pt;
-  color: #555555;
-  line-height: 1.2;
+  font-size: 6.2pt;
+  color: #94a3b8;
+  line-height: 1.1;
 }
 
-/* Print Specific Rules */
+/* ========================================================================= */
+/* 6. REFINED CINEMATIC FOOTER                                               */
+/* ========================================================================= */
+.inv-footer-area {
+  margin-top: auto;
+  margin-bottom: 22px;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+.inv-thank-you-script {
+  font-family: 'Great Vibes', cursive;
+  font-size: 27pt;
+  color: #c59b27;
+  line-height: 1;
+  margin-bottom: 2px;
+  text-shadow: 0 1px 2px rgba(197, 155, 39, 0.15);
+}
+
+.inv-tagline-sub {
+  font-family: 'Montserrat', sans-serif;
+  font-style: italic;
+  font-size: 8.5pt;
+  color: #333333;
+  letter-spacing: 0.3px;
+}
+
+/* Bottom Wave Banner SVG Positioned at Very Bottom of A4 Sheet */
+.inv-bottom-wave-banner {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 48px;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.inv-bot-wave-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ========================================================================= */
+/* 7. PRINT SPECIFIC RULES                                                   */
+/* ========================================================================= */
 @media print {
   @page {
     size: A4 portrait;
     margin: 0;
   }
 
+  html,
   body {
     background: #ffffff !important;
     margin: 0 !important;
     padding: 0 !important;
+    width: 210mm !important;
+    height: 297mm !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
   .app-sidebar,
@@ -480,6 +841,7 @@
   .invoice-form-panel,
   .action-buttons-bar,
   .preview-toolbar,
+  .btn-back-to-setu-fixed,
   .no-print {
     display: none !important;
   }
@@ -491,13 +853,17 @@
     display: block !important;
   }
 
-  .invoice-document.a4-sheet {
+  .invoice-document.a4-sheet.film-edition {
     box-shadow: none !important;
     margin: 0 !important;
+    padding: 10mm 14mm 24mm 14mm !important;
     width: 210mm !important;
     height: 297mm !important;
     min-height: 297mm !important;
-    page-break-after: avoid;
-    page-break-inside: avoid;
+    max-height: 297mm !important;
+    page-break-after: avoid !important;
+    page-break-inside: avoid !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 }
